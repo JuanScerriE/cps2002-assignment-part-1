@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class EchoController {
 
-    final ModelMapper mapper;
+    private final ModelMapper mapper;
 
     public EchoController(ModelMapper mapper) {
         this.mapper = mapper;
