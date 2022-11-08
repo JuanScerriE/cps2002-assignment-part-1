@@ -1,9 +1,9 @@
-package com.cps2002.consultancyservice.web.controllers.responses;
+package com.cps2002.consultancyservice.services.models;
 
-public class EchoResponse {
+public class UniqueEcho {
 
-    private String value;
     private String uuid;
+    private String value;
 
     public String getUuid() {
         return uuid;
@@ -20,5 +20,4 @@ public class EchoResponse {
     public void setValue(String value) {
         this.value = value;
     }
-
 }

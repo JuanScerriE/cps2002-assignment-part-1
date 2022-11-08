@@ -26,6 +26,7 @@ public class EchoControllerTests extends Tests {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid").exists())
                 .andExpect(jsonPath("$.value").value("Aw Dinja!"));
     }
 
