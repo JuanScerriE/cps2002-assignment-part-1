@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class EchoControllerTests extends Tests {
+public class EchoControllerTests extends ControllerTests {
 
     public EchoControllerTests(WebApplicationContext webApplicationContext) {
         super(webApplicationContext);
