@@ -14,12 +14,12 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
-public abstract class Tests {
+public abstract class ControllerTests {
 
     protected final WebApplicationContext webApplicationContext;
     protected MockMvc mockMvc;
 
-    public Tests(WebApplicationContext webApplicationContext) {
+    public ControllerTests(WebApplicationContext webApplicationContext) {
         this.webApplicationContext = webApplicationContext;
     }
 
