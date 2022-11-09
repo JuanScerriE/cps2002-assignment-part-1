@@ -28,4 +28,15 @@ public class EchoController {
         return ResponseEntity.ok(mapper.map(uniqueEcho, EchoResponse.class));
     }
 
+    @GetMapping(value = "get-echo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EchoResponse> getEcho(@RequestParam String uuid) {
+        UniqueEcho uniqueEcho = echoService.getUniqueEcho(uuid);
+
+        if (uniqueEcho == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(mapper.map(uniqueEcho, EchoResponse.class));
+    }
+
 }

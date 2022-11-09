@@ -23,9 +23,17 @@ public abstract class Tests {
         this.webApplicationContext = webApplicationContext;
     }
 
-    public static String asJsonString(final Object obj) {
+    public static String toJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T fromJsonString(final String content, Class<T> valueType) {
+        try {
+            return new ObjectMapper().readValue(content, valueType);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
