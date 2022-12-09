@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
+@CrossOrigin
 public class EchoController {
 
     private final ModelMapper mapper;
@@ -40,9 +42,10 @@ public class EchoController {
     }
 
 
-    @GetMapping(value = "get2/{text}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getEcho2(@PathVariable String text) {
-        return ResponseEntity.ok(text);
+    @GetMapping(value = "getecho", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getEcho2() {
+        System.out.println("I received");
+        return ResponseEntity.ok("You entered");
     }
 
 }

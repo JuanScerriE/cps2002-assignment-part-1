@@ -2,12 +2,12 @@ version: "3.0"
 
 services:
   db:
-    container_name: mysql
+    container_name: mysql-server
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: 'local'
     volumes:
-      - mysql:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/1.sql
     ports:
       - '3306:3306'
     expose:
@@ -17,6 +17,7 @@ services:
     restart: unless-stopped
 
   eurekaserver:
+    container_name: eureka-server
     image: eurekaserver
     build:
       context: .
@@ -29,6 +30,7 @@ services:
       - common
 
   customermanagementservice:
+    container_name: customer-management-service
     image: customermanagementservice
     build:
       context: .
@@ -44,6 +46,7 @@ services:
       - eurekaserver
 
   timetablingservice:
+    container_name: timetabling-service
     image: timetablingservice
     build:
       context: .
@@ -59,6 +62,7 @@ services:
       - eurekaserver
 
   gateway:
+    container_name: gateway
     image: gateway
     build:
       context: .
@@ -70,12 +74,23 @@ services:
     networks:
       - common
     depends_on:
-      - db
-      - eurekaserver
+      - customermanagementservice
+      - timetablingservice
 
-volumes:
-  mysql:
-    driver: local
+  interface:
+    container_name: interface
+    image: interface
+    build:
+      context: .
+      dockerfile: ./interface/Dockerfile
+    ports:
+      - '9100:9100'
+    expose:
+      - '9100'
+    networks:
+      - common
+    depends_on:
+      - gateway
 
 networks:
   common:
