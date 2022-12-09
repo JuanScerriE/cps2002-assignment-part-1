@@ -1,0 +1,28 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: Gateway
+  cloud:
+    gateway:
+      routes:
+        - id: CustomerManagement
+          uri: lb://customermanagement
+          predicates:
+            - Path=/customer-management-service/**
+          filters:
+            - StripPrefix=1
+        - id: Timetabling
+          uri: lb://timetabling
+          predicates:
+             - Path=/timetabling-service/**
+          filters:
+             - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true

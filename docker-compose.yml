@@ -1,0 +1,82 @@
+version: "3.0"
+
+services:
+  db:
+    container_name: mysql
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'local'
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    networks:
+      - common
+    restart: unless-stopped
+
+  eurekaserver:
+    image: eurekaserver
+    build:
+      context: .
+      dockerfile: ./eurekaserver/Dockerfile
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761'
+    networks:
+      - common
+
+  customermanagementservice:
+    image: customermanagementservice
+    build:
+      context: .
+      dockerfile: ./customermanagementservice/Dockerfile
+    ports:
+      - '9001:9001'
+    expose:
+      - '9001'
+    networks:
+      - common
+    depends_on:
+      - db
+      - eurekaserver
+
+  timetablingservice:
+    image: timetablingservice
+    build:
+      context: .
+      dockerfile: ./timetablingservice/Dockerfile
+    ports:
+      - '9002:9002'
+    expose:
+      - '9002'
+    networks:
+      - common
+    depends_on:
+      - db
+      - eurekaserver
+
+  gateway:
+    image: gateway
+    build:
+      context: .
+      dockerfile: ./gateway/Dockerfile
+    ports:
+      - '9000:9000'
+    expose:
+      - '9000'
+    networks:
+      - common
+    depends_on:
+      - db
+      - eurekaserver
+
+volumes:
+  mysql:
+    driver: local
+
+networks:
+  common:
+    driver: bridge
