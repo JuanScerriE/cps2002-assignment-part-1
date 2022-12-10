@@ -7,16 +7,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/echo', async function(req, res, next) {
-  let result = await fetch("http://gateway:9000/timetabling-service/getecho",
-      {
-        method: 'GET',
-        mode: 'cors'
-      });
-  console.log(result);
-  console.log(result.status);
-  console.log(result.body);
-  console.log(JSON.stringify(result.body));
-  res.send(result.text());
+  let response = await fetch("http://gateway:9000/timetabling-service/getecho");
+  res.send(await response.text());
 });
 
 module.exports = router;

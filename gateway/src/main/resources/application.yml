@@ -19,6 +19,17 @@ spring:
              - Path=/timetabling-service/**
           filters:
              - StripPrefix=1
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders:
+              - content-type
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
 
 eureka:
   client:
