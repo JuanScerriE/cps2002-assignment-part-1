@@ -81,7 +81,7 @@ function Dashboard() {
         </Fab>
        </Grid>
        CREATE CONSULTANT
-       <Grid container spacing={3} direction={'column'}> 
+       <Grid container spacing={3} direction={'column'} sx={{marginBottom:'5%'}}> 
           
           <Grid item xs={12} md={6}>
                    
@@ -123,6 +123,41 @@ function Dashboard() {
      >
        Submit
      </Fab>
+       </Grid>
+       DELETE USER
+        <Grid container spacing={3} direction={'column'}  sx={{marginBottom:'5%'}}>
+          <Grid item xs={12} md={6}>
+                   
+            <TextField   label="Id" variant="outlined" fullWidth />
+          </Grid>
+         
+          <Fab
+       
+          variant="extended"
+          sx={
+            {
+                  color: "#fff",
+                  width: 300,
+                  height: 35,
+                  borderRadius: 2,
+                  alignSelf: "center",
+                  marginTop: "5%",
+                  fontSize: "1rem",
+                  backgroundColor: "#000",
+                  transition:'all 0.3s ease-in-out',
+                  ": hover": {
+                    backgroundColor: "#FFF",
+                    color: "#000",
+                    border: "1px solid black",
+                    transform:'scale(1.05)'
+                  },
+                }
+             
+          }
+         
+        >
+          Delete
+        </Fab>
        </Grid>
       </MDBox>
      
