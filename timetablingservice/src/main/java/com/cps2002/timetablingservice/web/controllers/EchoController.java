@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin
 public class EchoController {
 
     private final ModelMapper mapper;

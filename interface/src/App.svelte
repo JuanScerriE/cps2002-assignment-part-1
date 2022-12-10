@@ -2,7 +2,11 @@
   import svelteLogo from './assets/svelte.svg'
   import Counter from './lib/Counter.svelte'
 
-  let promise = fetch("http://localhost:9000/timetabling-service/getecho");
+  let promise = fetch("http://localhost:9000/timetabling-service/getecho")
+          .then(res => res.text())
+          .catch(err => {
+            console.log(err);
+          });
 </script>
 
 <main>
@@ -22,8 +26,8 @@
 
   {#await promise}
     <p>...waiting</p>
-  {:then number}
-    <p>The number is {number}</p>
+  {:then text}
+    <p>{text}</p>
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}

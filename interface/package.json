@@ -1,18 +1,16 @@
 {
-  "name": "interface",
-  "version": "0.0.0",
+  "name": "interface2",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "node ./bin/www"
+    "dev": "vite --port 9100 --host",
+    "build": "vite build",
+    "preview": "vite preview --port 9100 --host"
   },
-  "dependencies": {
-    "body-parser": "^1.20.1",
-    "cookie-parser": "~1.4.4",
-    "cors": "^2.8.5",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "hbs": "~4.0.4",
-    "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.0.0",
+    "svelte": "^3.54.0",
+    "vite": "^4.0.0"
   }
 }
