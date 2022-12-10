@@ -1,8 +1,17 @@
 package com.cps2002.customermanagementservice.web.controllers.requests;
 
-public class CreateCustomerRequest {
+public class UpdateCustomerRequest {
+    private String uuid;
     private String name;
     private String specialityPreference;
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public String getName() {
         return name;

@@ -1,17 +1,17 @@
-package com.cps2002.timetablingservice.services.customermanagement.models;
+package com.cps2002.resourcemanagementservice.data.entities;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-public class BookedConsultant {
+@Entity
+public class ConsultantEntity {
+    @Id
     private String uuid;
+    private String value;
     private String name;
     private String type;
     private String speciality;
     private int rate;
-    private LocalDate date;
-    private LocalTime start;
-    private LocalTime end;
 
     public String getUuid() {
         return uuid;
@@ -19,6 +19,14 @@ public class BookedConsultant {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getName() {
@@ -53,27 +61,17 @@ public class BookedConsultant {
         this.rate = rate;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+    @Override
+    public String toString() {
+        //override to string method to return consultant object
 
-    public LocalTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalTime start) {
-        this.start = start;
-    }
-
-    public LocalTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalTime end) {
-        this.end = end;
+        return "Consultant{" + "\n" +
+                "Name" + name + "\n" +
+                "Type" + type + "\n" +
+                "Speciality" + speciality + "\n" +
+                "Rate" + rate + "\n" +
+                "Id" + uuid + "\n" +
+                '}';
     }
 }
