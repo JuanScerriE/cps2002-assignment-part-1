@@ -57,7 +57,7 @@ public class CustomerManagementService {
     public Optional<List<Customer>> getAllCustomers() {
         List<Customer> customers = new LinkedList<>();
 
-        for (var customerEntity : customerRepo.findAll()) {
+        for (CustomerEntity customerEntity : customerRepo.findAll()) {
             customers.add(mapper.map(customerEntity, Customer.class));
         }
 
@@ -79,7 +79,7 @@ public class CustomerManagementService {
     }
 
     public boolean updateCustomer(Customer customer) {
-        if (customer.getUuid() == null || customerRepo.findById(customer.getUuid()).isEmpty()) {
+        if (customer.getUuid() == null || !customerRepo.findById(customer.getUuid()).isPresent()) {
             return false;
         }
 

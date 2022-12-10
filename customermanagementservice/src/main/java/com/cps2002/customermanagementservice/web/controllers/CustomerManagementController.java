@@ -29,7 +29,7 @@ public class CustomerManagementController {
     public ResponseEntity<?> create(@RequestBody CreateCustomerRequest request) {
         Optional<String> uuid = customerManagementService.createCustomer(mapper.map(request, Customer.class));
 
-        if (uuid.isEmpty()) {
+        if (!uuid.isPresent()) {
             return Error.message("could not create customer");
         }
 
@@ -44,7 +44,7 @@ public class CustomerManagementController {
     public ResponseEntity<?> get(@RequestParam String uuid) {
         Optional<Customer> customer = customerManagementService.getCustomer(uuid);
 
-        if (customer.isEmpty()) {
+        if (!customer.isPresent()) {
             return Error.message("user with specified uuid does not exist");
         }
 
@@ -58,13 +58,13 @@ public class CustomerManagementController {
     public ResponseEntity<?> getAll() {
         Optional<List<Customer>> customers = customerManagementService.getAllCustomers();
 
-        if (customers.isEmpty()) {
+        if (!customers.isPresent()) {
             return Error.message("user with specified uuid does not exist");
         }
 
         List<GetCustomerResponse> customersResponse = new LinkedList<>();
 
-        for (var customer : customers.get()) {
+        for (Customer customer : customers.get()) {
             customersResponse.add(mapper.map(customer, GetCustomerResponse.class));
         }
 
