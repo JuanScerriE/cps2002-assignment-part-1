@@ -15,6 +15,8 @@ services:
     networks:
       - common
     restart: unless-stopped
+    env_file:
+      - .env
 
   eurekaserver:
     container_name: eureka-server
@@ -28,6 +30,8 @@ services:
       - '8761'
     networks:
       - common
+    env_file:
+      - .env
 
   customermanagementservice:
     container_name: customer-management-service
@@ -44,6 +48,8 @@ services:
     depends_on:
       - db
       - eurekaserver
+    env_file:
+      - .env
 
   timetablingservice:
     container_name: timetabling-service
@@ -60,6 +66,8 @@ services:
     depends_on:
       - db
       - eurekaserver
+    env_file:
+      - .env
 
   gateway:
     container_name: gateway
@@ -76,36 +84,8 @@ services:
     depends_on:
       - customermanagementservice
       - timetablingservice
-
-#  interface:
-#    container_name: interface
-#    image: interface
-#    build:
-#      context: .
-#      dockerfile: ./interface/Dockerfile
-#    ports:
-#      - '9100:9100'
-#    expose:
-#      - '9100'
-#    networks:
-#      - common
-#    depends_on:
-#      - gateway
-
-#  interface2:
-#    container_name: interface2
-#    image: interface2
-#    build:
-#      context: .
-#      dockerfile: ./interface2/Dockerfile
-#    ports:
-#      - '9100:9100'
-#    expose:
-#      - '9100'
-#    networks:
-#      - common
-#    depends_on:
-#      - gateway
+    env_file:
+      - .env
 
 networks:
   common:
