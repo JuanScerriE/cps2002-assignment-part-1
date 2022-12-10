@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 'local'
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/1.sql
     ports:
       - '3306:3306'
     expose:
@@ -51,6 +51,24 @@ services:
     env_file:
       - .env
 
+  resourcemanagementservice:
+    container_name: resource-management-service
+    image: resourcemanagementservice
+    build:
+      context: .
+      dockerfile: ./resourcemanagementservice/Dockerfile
+    ports:
+      - '9002:9002'
+    expose:
+      - '9002'
+    networks:
+      - common
+    depends_on:
+      - db
+      - eurekaserver
+    env_file:
+      - .env
+
   timetablingservice:
     container_name: timetabling-service
     image: timetablingservice
@@ -58,9 +76,9 @@ services:
       context: .
       dockerfile: ./timetablingservice/Dockerfile
     ports:
-      - '9002:9002'
+      - '9003:9003'
     expose:
-      - '9002'
+      - '9003'
     networks:
       - common
     depends_on:
@@ -82,6 +100,7 @@ services:
     networks:
       - common
     depends_on:
+      - resourcemanagementservice
       - customermanagementservice
       - timetablingservice
     env_file:

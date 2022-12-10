@@ -2,11 +2,32 @@
   import svelteLogo from './assets/svelte.svg'
   import Counter from './lib/Counter.svelte'
 
-  let promise = fetch("http://localhost:9000/timetabling-service/getecho")
-          .then(res => res.text())
-          .catch(err => {
-            console.log(err);
-          });
+  async function postData(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  let promise = postData("http://localhost:9000/resource-management-service/new_consultant",
+          {
+            uuid: null,
+            name: "test",
+            type: "sojif",
+            speciality: "asdf",
+            rate: 23
+          }
+  )
 </script>
 
 <main>
@@ -26,8 +47,8 @@
 
   {#await promise}
     <p>...waiting</p>
-  {:then text}
-    <p>{text}</p>
+  {:then response}
+    <p>{JSON.stringify(response)}</p>
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}

@@ -98,6 +98,7 @@
     </build>
 
     <modules>
+        <module>resourcemanagementservice</module>
         <module>customermanagementservice</module>
         <module>timetablingservice</module>
         <module>eurekaserver</module>

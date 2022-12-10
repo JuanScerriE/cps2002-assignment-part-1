@@ -1,2 +1,0 @@
-CREATE DATABASE IF NOT EXISTS customermanagement;
-CREATE DATABASE IF NOT EXISTS timetabling;

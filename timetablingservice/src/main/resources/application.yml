@@ -2,7 +2,7 @@ api:
   version: 0.0.1
 
 server:
-  port: 9002
+  port: 9003
   servlet:
     context-path: /
 
