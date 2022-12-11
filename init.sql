@@ -1,0 +1,6 @@
+CREATE
+DATABASE IF NOT EXISTS resourcemanagement;
+CREATE
+DATABASE IF NOT EXISTS customermanagement;
+CREATE
+DATABASE IF NOT EXISTS timetabling;
