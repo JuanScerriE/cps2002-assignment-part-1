@@ -29,11 +29,14 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import authorsTableData from "layouts/tables/data/authorsTableData";
-import projectsTableData from "layouts/tables/data/projectsTableData";
+import bookingsTableData from "layouts/tables/data/bookingsTableData";
+import consultantsTableData from "layouts/tables/data/consultantsTableData";
 
 function Tables() {
   const { columns, rows } = authorsTableData();
-  const { columns: pColumns, rows: pRows } = projectsTableData();
+  const { columns: pColumns, rows: pRows } = bookingsTableData();
+  const {columns: CColumns, rows: CRows} = consultantsTableData();
+
 //get users, get consultants, get bookings
 //allow editing and updating of users, consultants
 
@@ -89,7 +92,7 @@ function Tables() {
               </MDBox>
               <MDBox pt={3}>
                 <DataTable
-                  table={{ columns, rows }}
+                  table={{ columns:CColumns, rows:CRows }}
                   isSorted={false}
                   entriesPerPage={false}
                   showTotalEntries={false}
@@ -127,7 +130,7 @@ function Tables() {
           </Grid>
         </Grid>
       </MDBox>
-      <Footer />
+      
     </DashboardLayout>
   );
 }
