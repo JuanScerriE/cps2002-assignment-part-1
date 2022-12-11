@@ -78,26 +78,48 @@ function Dashboard() {
   };
 
   const handleCreateConsultant =async () => {
+
     const consultant={
+      value:{
+
+      uuid:null,
       name: consultantName,
       type: type,
       speciality: speciality,
-      rate: rate,
+      rate: rate
+      
+    }
     }
 
-   await fetch("http:localhost:9000/gateway/resource-management-service/new_consultant",{
+      console.log(JSON.stringify(consultant));
+   
+   await fetch("http://localhost:9000/resource-management-service/new_consultant",{
       method: "POST",
-      headers: {'X-Consultant-Id':'',
-      'Content-Type': 'application/json',},
-      body: JSON.stringify(consultant)
-   }).then((res)=>{
+      headers: {
+      'Content-Type': 'application/json',
+     
+    },
+      body: JSON.stringify(consultant),
+      mode: 'no-cors',
+   }).then(async(res)=>{
+    
+    await res.json().then((res)=>{
+
       console.log(res)
       setSnackbar({
         open: true,
-        message: `Consultant ${res.body} Created Successfully`,
+        content: `Consultant ${res.body} Created Successfully`,
         color: "success",
       
-      })}).catch((err)=>console.log(err));
+      })})}).catch((err)=>{setSnackbar({
+        open: true,
+        title: `Consultant ${err} Creation Failed`,
+        color: "error",
+          
+        });
+      console.log(err.message);
+      }
+        );
   };
 
 
@@ -122,7 +144,7 @@ function Dashboard() {
             <TextField   label="Preference" variant="outlined" fullWidth value={preference} onChange={(e)=>handlePreferenceChange(e)}/>
           </Grid>
           <Fab
-       
+          onClick={handleCreateUser}
           variant="extended"
           sx={
             {
@@ -163,10 +185,10 @@ function Dashboard() {
             <TextField   label="Speciality" variant="outlined" fullWidth value={speciality} onChange={(e)=>handleSpecialityChange(e)} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField   label="Rate" variant="outlined" fullWidth  value={rate} onChange={(e)=>handleRateChange(e)}/>
+            <TextField   label="Rate" variant="outlined" fullWidth type={'number'}  value={rate} onChange={(e)=>handleRateChange(e)}/>
           </Grid>
           <Fab
-       
+        onClick={()=>handleCreateConsultant()}
        variant="extended"
        sx={
          {
@@ -193,7 +215,7 @@ function Dashboard() {
        Submit
      </Fab>
        </Grid>
-       DELETE USER
+       {/* DELETE USER
         <Grid container spacing={3} direction={'column'}  sx={{marginBottom:'5%'}}>
           <Grid item xs={12} md={6}>
                    
@@ -227,7 +249,7 @@ function Dashboard() {
         >
           Delete
         </Fab>
-       </Grid>
+       </Grid> */}
       </MDBox>
      
     </DashboardLayout>

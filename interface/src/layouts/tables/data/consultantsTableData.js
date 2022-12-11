@@ -32,7 +32,7 @@ export default function Data() {
 
 //fetch all consultants
   const consultants=async()=>{
-   await  fetch("http://localhost:9000/resource-managements-service/getallconsultants").then(async(response) => {
+   await  fetch("http://localhost:9000/resource-management-service/consultants").then(async(response) => {
      await response.json().then((data) => {
         setConsultants(data);
         console.log(data);

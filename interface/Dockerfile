@@ -5,12 +5,12 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY ./interface2/package*.json ./
+COPY ./interface/package*.json ./
 RUN npm install
 
 # Bundle app source
-COPY ./interface2/ .
+COPY ./interface/ .
 
 EXPOSE 9100
 
-CMD [ "npm", "start", "preview" ]
+CMD [ "npm", "run", "start" ]
