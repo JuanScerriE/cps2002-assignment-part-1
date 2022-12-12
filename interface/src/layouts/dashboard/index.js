@@ -85,9 +85,14 @@ function Dashboard() {
       fetch("http://localhost:9000/resource-management-service/new_consultant", {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+               'Access-Control-Allow-Origin': '*',
+               'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+               'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+               'Access-Control-Max-Age': '3600'
           },
-          body: JSON.stringify(consultant)
+          body: JSON.stringify(consultant),
+          
       })
           .then(res => res.json())
           .then(body => {
