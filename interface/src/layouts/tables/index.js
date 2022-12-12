@@ -32,104 +32,43 @@ import authorsTableData from "layouts/tables/data/authorsTableData";
 import bookingsTableData from "layouts/tables/data/bookingsTableData";
 import consultantsTableData from "layouts/tables/data/consultantsTableData";
 
+import { useState, useEffect } from "react";
+import { Table,TableBody,TableCell,TableContainer,TableHead} from "@mui/material";
+
+
 function Tables() {
-  const { columns, rows } = authorsTableData();
-  const { columns: pColumns, rows: pRows } = bookingsTableData();
-  const {columns: CColumns, rows: CRows} = consultantsTableData();
+  // const { columns, rows } = authorsTableData();
+  // const { columns: pColumns, rows: pRows } = bookingsTableData();
+  // const {columns: CColumns, rows: CRows} = consultantsTableData();
 
 //get users, get consultants, get bookings
 //allow editing and updating of users, consultants
+
+  const [users, setUsers] = useState([]);
+  const [consultants, setConsultants] = useState([]);
+  const [bookings, setBookings] = useState([]);
+
+  const FetchConsultants=async()=>{
+
+    let promise = await fetch("http://localhost:9000/resource-managements-service/consultants",{method: "GET", mode:'cors'});
+    let result = await promise.json();
+    
+    console.log(result);
+    setConsultants(result);
+    
+   
+
+   }
+
+   useEffect(() => {
+    FetchConsultants();
+  }, []);
 
   return (
     
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox pt={6} pb={3}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                
-                <MDTypography variant="h6" color="white">
-                  Users
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                  Consultants
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns:CColumns, rows:CRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h6" color="white">
-                 Bookings
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns, rows: pRows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-        </Grid>
-      </MDBox>
+     
       
     </DashboardLayout>
   );

@@ -96,12 +96,17 @@ function Dashboard() {
        
     await fetch("http://localhost:9000/resource-management-service/new_consultant",{
       method: "POST",
+      credentials: 'no-origin',
+      cache: 'no-cache',
       headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+     
     },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
       body: jsonObj,
-      mode: 'no-cors',
+      mode: 'cors',
    }).then(async(res)=>{
     
      await res.text().then((res)=>{

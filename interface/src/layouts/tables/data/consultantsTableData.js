@@ -27,19 +27,20 @@ import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
 
+
 export default function Data() {
   const [Consultants, setConsultants] = useState([]);
 
 //fetch all consultants
   const consultants=async()=>{
-   await  fetch("http://localhost:9000/resource-management-service/consultants").then(async(response) => {
-     await response.json().then((data) => {
-        setConsultants(data);
-        console.log(data);
-      });
-    })
-
-  }
+      let promise = await fetch("http://localhost:9000/resource-managements-service/getallconsultants", {method: "GET"});
+      let result = await promise.json();
+      setConsultants(result);
+      console.log(result);
+     
+     }
+   
+  
   const handleDelete = async (id) => {
     await fetch("http://localhost:9000/resource-managements-service/deleteconsultant/" + id, {
       method: "DELETE",
@@ -130,10 +131,10 @@ export default function Data() {
   }
 
 
-  // React.useEffect(() => {
-  //   consultants();
-  //   Edit();
-  // }, []);
+  React.useEffect(() => {
+    consultants();
+    // Edit();
+  }, []);
  
   return {
     columns: [
