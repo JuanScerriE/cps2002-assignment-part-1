@@ -21,7 +21,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cps2002.consultancyservice.web.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.cps2002.resourcemanagementservice.web.controllers"))
                 .paths(PathSelectors.any())
                 .build();
     }
