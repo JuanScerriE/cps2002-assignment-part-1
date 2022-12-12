@@ -32,13 +32,8 @@ spring:
         corsConfigurations:
           '[/**]':
             allowedOrigins: "*"
-            allowedHeaders:
-              - content-type
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
+            allowedHeaders: "*"
+            allowedMethods: "*"
 
 eureka:
   client:
