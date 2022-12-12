@@ -18,7 +18,7 @@ import Grid from "@mui/material/Grid";
 import * as React from "react";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-
+import axios from "axios";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -35,6 +35,7 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+import { FaceRetouchingNatural } from "@mui/icons-material";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
@@ -73,7 +74,7 @@ function Dashboard() {
   const handleCreateUser = async() => {
      const user={
        name: userName,
-       preference: preference,
+       specialityPreference: preference,
      }
   };
 
@@ -81,45 +82,48 @@ function Dashboard() {
 
     const consultant={
       value:{
-
       uuid:null,
       name: consultantName,
       type: type,
       speciality: speciality,
       rate: rate
-      
     }
     }
 
       console.log(JSON.stringify(consultant));
+      const jsonObj=JSON.stringify(consultant);
    
-   await fetch("http://localhost:9000/resource-management-service/new_consultant",{
+       
+    await fetch("http://localhost:9000/resource-management-service/new_consultant",{
       method: "POST",
       headers: {
       'Content-Type': 'application/json',
-     
+      'Accept': 'application/json'
     },
-      body: JSON.stringify(consultant),
+      body: jsonObj,
       mode: 'no-cors',
    }).then(async(res)=>{
     
-    await res.json().then((res)=>{
-
-      console.log(res)
+     await res.text().then((res)=>{
+      console.log(res);
       setSnackbar({
         open: true,
-        content: `Consultant ${res.body} Created Successfully`,
+        message: `Consultant ${res.body} Created Successfully`,
         color: "success",
       
       })})}).catch((err)=>{setSnackbar({
         open: true,
-        title: `Consultant ${err} Creation Failed`,
+        message: `Consultant ${err} Creation Failed`,
         color: "error",
           
         });
       console.log(err.message);
       }
         );
+
+   
+    
+
   };
 
 
@@ -128,7 +132,7 @@ function Dashboard() {
     <DashboardLayout>
       <MDSnackbar
         open={snackbar.open}
-        message={snackbar.message}
+        content={snackbar.message}
         color={snackbar.color}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
