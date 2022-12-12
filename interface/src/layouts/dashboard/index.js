@@ -11,10 +11,10 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // @mui material components
-import Grid from "@mui/material/Grid"; 
+import Grid from "@mui/material/Grid";
 import * as React from "react";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -22,20 +22,10 @@ import axios from "axios";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-import { TextField,Fab } from "@mui/material";
+import {Fab, TextField} from "@mui/material";
 import MDSnackbar from "../../components/MDSnackbar";
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
-
-// Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
-import { FaceRetouchingNatural } from "@mui/icons-material";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
@@ -78,57 +68,44 @@ function Dashboard() {
      }
   };
 
-  const handleCreateConsultant =async () => {
 
-    const consultant={
-      value:{
-      uuid:null,
-      name: consultantName,
-      type: type,
-      speciality: speciality,
-      rate: rate
-    }
-    }
+  const handleCreateConsultant = async () => {
+      const consultant = {
+          value: {
+              uuid: null,
+              name: consultantName,
+              type: type,
+              speciality: speciality,
+              rate: rate
+          }
+      }
 
       console.log(JSON.stringify(consultant));
-      const jsonObj=JSON.stringify(consultant);
-   
-       
-    await fetch("http://localhost:9000/resource-management-service/new_consultant",{
-      method: "POST",
-      credentials: 'no-origin',
-      cache: 'no-cache',
-      headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-     
-    },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
-      body: jsonObj,
-      mode: 'cors',
-   }).then(async(res)=>{
-    
-     await res.text().then((res)=>{
-      console.log(res);
-      setSnackbar({
-        open: true,
-        message: `Consultant ${res.body} Created Successfully`,
-        color: "success",
-      
-      })})}).catch((err)=>{setSnackbar({
-        open: true,
-        message: `Consultant ${err} Creation Failed`,
-        color: "error",
-          
-        });
-      console.log(err.message);
-      }
-        );
 
-   
-    
+      fetch("http://localhost:9000/resource-management-service/new_consultant", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(consultant)
+      })
+          .then(res => res.json())
+          .then(body => {
+              console.log(body);
 
+              setSnackbar({
+                  open: true,
+                  message: `Consultant ${body["consultantId"]} Creation Successfully`,
+                  color: "success",
+              });
+          })
+          .catch(err => {
+              setSnackbar({
+                  open: true,
+                  message: `Consultant ${err} Creation Failed`,
+                  color: "error",
+              });
+          });
   };
 
 
@@ -136,10 +113,10 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <MDSnackbar
-        open={snackbar.open}
-        content={snackbar.message}
-        color={snackbar.color}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
+          open={snackbar.open}
+          title={snackbar.message}
+          color={snackbar.color}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
       <DashboardNavbar />
       <MDBox py={3}>
@@ -197,9 +174,9 @@ function Dashboard() {
             <TextField   label="Rate" variant="outlined" fullWidth type={'number'}  value={rate} onChange={(e)=>handleRateChange(e)}/>
           </Grid>
           <Fab
-        onClick={()=>handleCreateConsultant()}
-       variant="extended"
-       sx={
+              onClick={handleCreateConsultant}
+              variant="extended"
+              sx={
          {
                color: "#fff",
                width: 300,
