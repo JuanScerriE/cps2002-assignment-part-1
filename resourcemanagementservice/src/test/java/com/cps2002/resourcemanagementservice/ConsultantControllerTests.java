@@ -113,15 +113,26 @@ public class ConsultantControllerTests extends Tests {
 
         //pass customer id and put query function before booking to find consultant id, or
         //give option for them to pass consultant id themselves || name.
-        Consultant consultant = new Consultant();
-        //set values of consultant for testing
-        consultant.setName("John");
-        consultant.setType("Consultant");
-        consultant.setSpeciality("Maths");
-        consultant.setRate(10);
+         Consultant consultant = new Consultant();
 
-        String consultantId = consultantsService.CreateConsultant(consultant);
-        consultant.setUuid(consultantId);
+         consultant.setName("John");
+         consultant.setType("Consultant");
+         consultant.setSpeciality("Maths");
+         consultant.setRate(10);
+
+         String consultantId = consultantsService.CreateConsultant(consultant);
+         consultant.setUuid(consultantId);
+
+
+        Consultant consultantX = new Consultant();
+
+        consultantX.setName("Sam");
+        consultantX.setType("Consultant");
+        consultantX.setSpeciality("Fraud");
+        consultantX.setRate(10);
+
+        String consultantXId = consultantsService.CreateConsultant(consultantX);
+        consultantX.setUuid(consultantXId);
 
 
         mockMvc.perform(get("/consultants"))

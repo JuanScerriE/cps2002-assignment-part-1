@@ -30,7 +30,7 @@ public class ConsultantServiceController {
     }
 
     @PostMapping(value = "new_consultant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateConsultantResponse> submit(@RequestHeader(name = "X-Consultant-Id") @RequestBody CreateConsultantRequest request) {
+    public ResponseEntity<CreateConsultantResponse> submit( @RequestBody CreateConsultantRequest request) {
 
         Consultant consultantCreation = mapper.map(request.getValue(), Consultant.class);
 
@@ -46,7 +46,7 @@ public class ConsultantServiceController {
 
 
     @PostMapping(value = "new_booking", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookConsultantResponse> submit(@RequestHeader(name = "X-Customer-Id") @RequestBody BookConsultantRequest request) {
+    public ResponseEntity<BookConsultantResponse> submit( @RequestBody BookConsultantRequest request) {
 
 
         //create order instance 
@@ -86,7 +86,7 @@ public class ConsultantServiceController {
         ArrayList<Consultant> consultants = consultantsService.GetConsultants();
         ;
 
-        System.out.println(consultants);
+
 
         if (consultants == null) {
             return ResponseEntity.notFound().build();
@@ -121,7 +121,7 @@ public class ConsultantServiceController {
     }
 
     @PostMapping(value = "/update_consultant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UpdateConsultantResponse> update(@RequestHeader(name = "X-Consultant-Id") @RequestBody UpdateConsultantRequest request) {
+    public ResponseEntity<UpdateConsultantResponse> update( @RequestBody UpdateConsultantRequest request) {
 
 
         Consultant consultantCreation = mapper.map(request.getValue(), Consultant.class);

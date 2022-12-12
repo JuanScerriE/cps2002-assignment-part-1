@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -61,10 +62,12 @@ public class ConsultantsService {
         //get all consultants
         ArrayList<Consultant> consultants = new ArrayList<Consultant>();
         Iterable<ConsultantEntity> consultantEntities = consultantRepository.findAll();
+        System.out.println(consultantEntities);
         for (ConsultantEntity consultantEntity : consultantEntities) {
             Consultant consultant = mapper.map(consultantEntity, Consultant.class);
             consultants.add(consultant);
         }
+
         return consultants;
 
     }

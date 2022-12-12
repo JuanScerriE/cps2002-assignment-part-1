@@ -13,4 +13,4 @@ COPY ./interface/ .
 
 EXPOSE 9100
 
-CMD [ "npm", "run", "preview" ]
+CMD [ "npm", "run", "start" ]
