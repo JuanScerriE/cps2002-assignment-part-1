@@ -48,8 +48,6 @@ public class CustomerManagementController {
             return Error.message("user with specified uuid does not exist");
         }
 
-        GetCustomerResponse response = new GetCustomerResponse();
-
         return ResponseEntity.ok(mapper.map(customer.get(), GetCustomerResponse.class));
     }
 

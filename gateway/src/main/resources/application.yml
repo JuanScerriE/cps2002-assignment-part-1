@@ -11,21 +11,18 @@ spring:
           uri: lb://resourcemanagement
           predicates:
             - Path=/resource-management-service/**
-            - Method=GET,POST,PUT,DELETE
           filters:
             - StripPrefix=1
         - id: CustomerManagement
           uri: lb://customermanagement
           predicates:
             - Path=/customer-management-service/**
-            - Method=GET,POST,PUT,DELETE
           filters:
             - StripPrefix=1
         - id: Timetabling
           uri: lb://timetabling
           predicates:
             - Path=/timetabling-service/**
-            - Method=GET,POST,PUT,DELETE
           filters:
              - StripPrefix=1
       globalcors:

@@ -1,30 +1,33 @@
 package com.cps2002.timetablingservice.web.controllers;
 
+import com.cps2002.timetablingservice.data.repositories.BookingRepository;
 import com.cps2002.timetablingservice.services.TimetablingService;
 import com.cps2002.timetablingservice.services.models.Booking;
 import com.cps2002.timetablingservice.web.controllers.requests.CanBookRequest;
 import com.cps2002.timetablingservice.web.controllers.requests.CreateBookingRequest;
-import com.cps2002.timetablingservice.web.controllers.responses.CanBookResponse;
-import com.cps2002.timetablingservice.web.controllers.responses.CreateBookingResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 public class TimetablingController {
     private final ModelMapper mapper;
     private final TimetablingService timetablingService;
+    private final BookingRepository bookingRepository;
 
-    public TimetablingController(ModelMapper mapper, TimetablingService timetablingService) {
+    public TimetablingController(ModelMapper mapper, TimetablingService timetablingService,
+                                 BookingRepository bookingRepository) {
         this.mapper = mapper;
         this.timetablingService = timetablingService;
+        this.bookingRepository = bookingRepository;
     }
 
     @PostMapping(value = "can-book", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,19 +81,45 @@ public class TimetablingController {
 
         return ResponseEntity.ok(new CreateBookingResponse(uuid.get()));
     }
-//
-//    @GetMapping(value = "get", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> get(@RequestParam String uuid) {
-//        Optional<Customer> customer = customerManagementService.getCustomer(uuid);
-//
-//        if (customer.isEmpty()) {
-//            return java.lang.Error.message("user with specified uuid does not exist");
-//        }
-//
-//        GetCustomerResponse response = new GetCustomerResponse();
-//
-//        return ResponseEntity.ok(mapper.map(customer.get(), GetCustomerResponse.class));
-//    }
+
+    @DeleteMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> delete(@RequestParam String uuid) {
+        boolean deleted = timetablingService.deleteBooking(uuid);
+
+        if (!deleted) {
+            return Error.message("could not delete booking");
+        }
+
+        return ResponseEntity.ok(new DeleteBookingResponse(deleted));
+    }
+
+    @GetMapping(value = "get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> get(@RequestParam String uuid) {
+        Optional<Booking> booking = timetablingService.getBooking(uuid);
+
+        if (!booking.isPresent()) {
+            return Error.message("user with specified uuid does not exist");
+        }
+
+        return ResponseEntity.ok(mapper.map(booking.get(), GetBookingResponse.class));
+    }
+
+    @GetMapping(value = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAll() {
+        Optional<List<Booking>> bookings = timetablingService.getAllBookings();
+
+        if (!bookings.isPresent()) {
+            return Error.message("could not load all bookings");
+        }
+
+        List<GetBookingResponse> customersResponse = new LinkedList<>();
+
+        for (Booking customer : bookings.get()) {
+            customersResponse.add(mapper.map(customer, GetBookingResponse.class));
+        }
+
+        return ResponseEntity.ok(customersResponse);
+    }
 //
 //
 //    @GetMapping(value = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)

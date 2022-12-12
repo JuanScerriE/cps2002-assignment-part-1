@@ -10,6 +10,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -101,5 +103,30 @@ public class TimetablingService {
         bookingRepo.deleteById(uuid);
 
         return true;
+    }
+
+    public Optional<Booking> getBooking(String uuid) {
+        if (uuid == null) {
+            return Optional.empty();
+        }
+
+        Optional<BookingEntity> optionalBookingEntity = bookingRepo.findById(uuid);
+
+        if (!optionalBookingEntity.isPresent()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(mapper.map(optionalBookingEntity.get(), Booking.class));
+    }
+
+
+    public Optional<List<Booking>> getAllBookings() {
+        List<Booking> customers = new LinkedList<>();
+
+        for (BookingEntity customerEntity : bookingRepo.findAll()) {
+            customers.add(mapper.map(customerEntity, Booking.class));
+        }
+
+        return Optional.of(customers);
     }
 }
