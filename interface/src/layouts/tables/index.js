@@ -51,11 +51,7 @@ function Tables() {
   const FetchConsultants=async()=>{
 
     let promise = await fetch("http://localhost:9000/resource-management-service/consultants",{method: "GET"});
-    console.log(promise);
-    promise.json().then((data) => {
-      console.log(data);
-    }).then((result)=>{
-     
+    let result = await promise.json();
     
 
     console.log(result);
@@ -63,7 +59,7 @@ function Tables() {
     setConsultants(result);
     
    
-    });
+
    }
 
    useEffect(() => {

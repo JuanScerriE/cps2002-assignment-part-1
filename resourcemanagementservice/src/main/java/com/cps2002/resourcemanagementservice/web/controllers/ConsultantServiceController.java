@@ -86,7 +86,7 @@ public class ConsultantServiceController {
         ArrayList<Consultant> consultants = consultantsService.GetConsultants();
         ;
 
-        System.out.println(consultants);
+
 
         if (consultants == null) {
             return ResponseEntity.notFound().build();
