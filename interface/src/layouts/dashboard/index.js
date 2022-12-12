@@ -84,7 +84,7 @@ function Dashboard() {
       fetch("http://localhost:9000/resource-management-service/new_consultant", {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
           },
           body: JSON.stringify(consultant)
       })
