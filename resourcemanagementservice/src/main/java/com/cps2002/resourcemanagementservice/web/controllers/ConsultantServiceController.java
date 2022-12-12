@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 public class ConsultantServiceController {
@@ -78,22 +80,20 @@ public class ConsultantServiceController {
     }
 
     @GetMapping(value = "consultants", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetConsultantsResponse> getAll() {
-
-        //ConsultantService.java includes all functions/operations
-        //this gets specific consultant, you can format to any type of query you'd like
-
+    public ResponseEntity<List<GetConsultantResponse>> getAll() {
         ArrayList<Consultant> consultants = consultantsService.GetConsultants();
-        ;
-
-
 
         if (consultants == null) {
             return ResponseEntity.notFound().build();
         }
 
-        GetConsultantsResponse getConsultantsResponse = mapper.map(consultants, GetConsultantsResponse.class);
-        return ResponseEntity.ok(getConsultantsResponse);
+        LinkedList<GetConsultantResponse> response = new LinkedList<>();
+
+        for (Consultant consultant : consultants) {
+            response.add(mapper.map(consultant, GetConsultantResponse.class));
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/delete/{consultantId}")
