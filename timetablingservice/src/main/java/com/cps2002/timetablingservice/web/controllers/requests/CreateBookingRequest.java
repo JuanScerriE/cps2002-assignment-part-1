@@ -4,6 +4,7 @@ public class CreateBookingRequest {
     private String customerUuid;
     private String consultantUuid;
     private String start;
+    private String end;
 
     public String getCustomerUuid() {
         return customerUuid;
@@ -37,5 +38,4 @@ public class CreateBookingRequest {
         this.end = end;
     }
 
-    private String end;
 }
