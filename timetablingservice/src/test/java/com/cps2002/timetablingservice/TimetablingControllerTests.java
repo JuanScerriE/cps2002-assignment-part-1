@@ -1,7 +1,5 @@
 package com.cps2002.timetablingservice;
 
-import com.cps2002.timetablingservice.web.controllers.requests.EchoRequest;
-import com.cps2002.timetablingservice.web.controllers.responses.EchoResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
@@ -11,9 +9,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class EchoControllerTests extends ControllerTests {
-
-    public EchoControllerTests(WebApplicationContext webApplicationContext) {
+public class TimetablingControllerTests extends ControllerTests {
+//    private final TimetablingServiceInternal timetablingService;
+//    public TimetablingControllerTests(TimetablingServiceInternal timetablingService) {
+//        this.timetablingService = timetablingService;
+//    }
+    public TimetablingControllerTests(WebApplicationContext webApplicationContext) {
         super(webApplicationContext);
     }
 
