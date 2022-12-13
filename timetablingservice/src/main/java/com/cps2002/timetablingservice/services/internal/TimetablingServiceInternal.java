@@ -131,7 +131,7 @@ public class TimetablingServiceInternal implements TimetablingService {
     public Optional<List<Booking>> getAllBookings(String consultantUuid, String customerUuid) {
         List<Booking> customers = new LinkedList<>();
 
-        if (consultantUuid == null && consultantUuid == null) {
+        if (customerUuid == null && consultantUuid == null) {
             for (BookingEntity customerEntity : bookingRepo.findAll()) {
                 customers.add(mapper.map(customerEntity, Booking.class));
             }
