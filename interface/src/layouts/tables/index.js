@@ -162,8 +162,8 @@ function Tables() {
           setUpdateRate(selectedRowData[0].rate);
 
         }}
-        editMode="row"
-
+      
+          
       />
       {
         selectedConsultant && <div style={{display:'flex',width:'100%',flexDirection:"row"}}>
