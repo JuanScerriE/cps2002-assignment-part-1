@@ -1,4 +1,4 @@
-package com.cps2002.timetablingservice.services.models;
+package com.cps2002.timetablingservice.services.internal.models;
 
 public class Consultant {
     private String uuid;

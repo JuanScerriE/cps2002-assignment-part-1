@@ -3,8 +3,8 @@ package com.cps2002.timetablingservice.services.internal;
 import com.cps2002.timetablingservice.data.entities.BookingEntity;
 import com.cps2002.timetablingservice.data.repositories.BookingRepository;
 import com.cps2002.timetablingservice.services.TimetablingService;
-import com.cps2002.timetablingservice.services.models.Booking;
-import com.cps2002.timetablingservice.services.models.Consultant;
+import com.cps2002.timetablingservice.services.internal.models.Booking;
+import com.cps2002.timetablingservice.services.internal.models.Consultant;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -41,19 +41,22 @@ public class TimetablingServiceInternal implements TimetablingService {
         double startTime = getTimeFromDate(booking.getStart());
         double endTime = getTimeFromDate(booking.getEnd());
 
-        // TODO: add check to allow only future bookings
-
         // consultancy must last at least an hour and start < end
         if (endTime - startTime < 1) {
             return false;
         }
 
+        // booking has to be done one day in advance
+        if (!booking.getStart().isAfter(LocalDateTime.now().plusDays(1))) {
+            return false;
+        }
+
         // start and end must be within working hours
         if (
-                startTime < START_OF_WORK_HOURS ||
-                        startTime > END_OF_WORK_HOURS ||
-                        endTime < START_OF_WORK_HOURS ||
-                        endTime > END_OF_WORK_HOURS
+            startTime < START_OF_WORK_HOURS ||
+                startTime > END_OF_WORK_HOURS ||
+                endTime < START_OF_WORK_HOURS ||
+                endTime > END_OF_WORK_HOURS
         ) {
             return false;
         }
@@ -66,6 +69,7 @@ public class TimetablingServiceInternal implements TimetablingService {
             return false;
         }
 
+        // check for no conflicting bookings
         if (!bookingRepo.canBook(booking.getConsultantUuid(), booking.getStart()).isEmpty()) {
             return false;
         }
@@ -152,5 +156,16 @@ public class TimetablingServiceInternal implements TimetablingService {
         }
 
         return Optional.empty();
+    }
+
+    // helper methods to facilitate testing
+    public Optional<String> unsafeCreateBooking(Booking booking) {
+        BookingEntity bookingEntity = mapper.map(booking, BookingEntity.class);
+
+        bookingEntity.setUuid(UUID.randomUUID().toString());
+
+        bookingRepo.save(bookingEntity);
+
+        return Optional.of(bookingEntity.getUuid());
     }
 }

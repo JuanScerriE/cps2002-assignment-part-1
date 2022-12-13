@@ -1,7 +1,7 @@
 package com.cps2002.timetablingservice.services.proxy;
 
 import com.cps2002.timetablingservice.services.TimetablingService;
-import com.cps2002.timetablingservice.services.models.Booking;
+import com.cps2002.timetablingservice.services.internal.models.Booking;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

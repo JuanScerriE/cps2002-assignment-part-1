@@ -1,6 +1,6 @@
 package com.cps2002.timetablingservice.services;
 
-import com.cps2002.timetablingservice.services.models.Booking;
+import com.cps2002.timetablingservice.services.internal.models.Booking;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,9 @@
-package com.cps2002.timetablingservice.services.models;
+package com.cps2002.timetablingservice.services.internal.models;
 
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 public class Booking {
     private String uuid;
@@ -55,6 +57,15 @@ public class Booking {
 
     public void setEnd(LocalDateTime end) {
         this.end = end;
+    }
+
+    public boolean equals(Booking other) {
+        return
+            this.uuid.equals(other.uuid) &&
+            this.consultantUuid.equals(other.consultantUuid) &&
+            this.customerUuid.equals(other.customerUuid) &&
+            this.start.isEqual(other.start) &&
+            this.end.isEqual(other.end);
     }
 
     public static class Builder {

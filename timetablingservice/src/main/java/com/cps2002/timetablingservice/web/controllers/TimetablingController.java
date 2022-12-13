@@ -1,7 +1,7 @@
 package com.cps2002.timetablingservice.web.controllers;
 
 import com.cps2002.timetablingservice.services.TimetablingService;
-import com.cps2002.timetablingservice.services.models.Booking;
+import com.cps2002.timetablingservice.services.internal.models.Booking;
 import com.cps2002.timetablingservice.web.controllers.dto._Interval;
 import com.cps2002.timetablingservice.web.controllers.requests.CanBookRequest;
 import com.cps2002.timetablingservice.web.controllers.requests.CreateBookingRequest;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class TimetablingController {
     }
 
     private _Interval<LocalDateTime> parseStringTimestamps(String start, String end) {
-        return new _Interval<>(LocalDateTime.parse(start), LocalDateTime.parse(end));
+        return new _Interval<>(LocalDateTime.parse(start).truncatedTo(ChronoUnit.SECONDS), LocalDateTime.parse(end).truncatedTo(ChronoUnit.SECONDS));
     }
 
     @PostMapping(value = "can-book", produces = MediaType.APPLICATION_JSON_VALUE)
