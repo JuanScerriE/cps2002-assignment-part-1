@@ -1,28 +1,19 @@
 package com.cps2002.resourcemanagementservice.services.models;
 
+import java.time.LocalDateTime;
+
 public class Booking {
-    private String customerId;
     private String uuid;
-    private String consultantId;
-    private String date;
-    private String time;
-    private int hours;
+    private String consultantUuid;
+    private String customerUuid;
+    private LocalDateTime start;
+    private LocalDateTime end;
 
-
-    public String getCustomerId() {
-        return customerId;
+    private Booking() {
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getConsultantId() {
-        return consultantId;
-    }
-
-    public void setConsultantId(String consultantId) {
-        this.consultantId = consultantId;
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getUuid() {
@@ -33,29 +24,73 @@ public class Booking {
         this.uuid = uuid;
     }
 
-    public String getDate() {
-        return date;
+    public String getConsultantUuid() {
+        return consultantUuid;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setConsultantUuid(String consultantUuid) {
+        this.consultantUuid = consultantUuid;
     }
 
-    public String getTime() {
-        return time;
+    public String getCustomerUuid() {
+        return customerUuid;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setCustomerUuid(String customerUuid) {
+        this.customerUuid = customerUuid;
     }
 
-
-    public int getHours() {
-        return hours;
+    public LocalDateTime getStart() {
+        return start;
     }
 
-    public void setHours(int hours) {
-        this.hours = hours;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public static class Builder {
+        private final Booking booking;
+
+        private Builder() {
+            booking = new Booking();
+        }
+
+        public Booking build() {
+            return booking;
+        }
+
+        public Builder uuid(String uuid) {
+            booking.setUuid(uuid);
+            return this;
+        }
+
+        public Builder consultantUuid(String consultantUuid) {
+            booking.setConsultantUuid(consultantUuid);
+            return this;
+        }
+
+        public Builder customerUuid(String customerUuid) {
+            booking.setCustomerUuid(customerUuid);
+            return this;
+        }
+
+        public Builder start(LocalDateTime start) {
+            booking.setStart(start);
+            return this;
+        }
+
+        public Builder end(LocalDateTime end) {
+            booking.setEnd(end);
+            return this;
+        }
     }
 
     @Override

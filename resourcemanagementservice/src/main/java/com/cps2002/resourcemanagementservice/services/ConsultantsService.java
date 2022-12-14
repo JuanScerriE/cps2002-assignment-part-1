@@ -18,12 +18,7 @@ import java.util.UUID;
 @Service
 public class ConsultantsService {
 
-    //create
-//get all
-//get under certain parameters
-//delete
-//update
-//book/order
+
     @Autowired
     ConsultantRepository consultantRepository;
     @Autowired
@@ -91,7 +86,35 @@ public class ConsultantsService {
         //delete consultant
         consultantRepository.deleteById(id);
         ConsultantEntity consultantEntity = consultantRepository.findById(id).orElse(null);
+
+        
+        
+        public List<Booking> getBookingsByConsultantId(String consultantId) {
+            List<Booking> bookings = new ArrayList<>();
+                     
+            String url = 'http://TIMETABLING/get-all-by-consultant?consultantUuid=' + consultantId;
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<List<Booking>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Booking>>() {
+            });
+            bookings = response.getBody();
+            return bookings;
+        }
+
+
         if (consultantEntity == null) {
+              
+           //create observer that removes consultant from all bookings
+           //get all bookings related to consultant and update their consultant id to null
+
+           //get all bookings related to consultant id with http request from timetabling service
+              //update all bookings related to consultant id with http request from timetabling service
+              
+              getBookingsByConsultantId(id).forEach(booking -> {
+                  booking.setConsultantUuid(null);
+                  String url = 'http://TIMETABLING/update-booking';
+                  RestTemplate restTemplate = new RestTemplate();
+                  restTemplate.postForObject(url, booking, Booking.class);
+              });
 
             return id;
         } else {

@@ -66,6 +66,39 @@ function Dashboard() {
        name: userName,
        specialityPreference: preference,
      }
+
+      console.log(JSON.stringify(user));
+
+      fetch("http://localhost:9000/customer-management-service/create", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+
+          },
+          body: JSON.stringify(user),
+
+      })
+          .then(res => res.json())
+          .then(body => {
+              console.log(body);
+
+              setSnackbar({
+                  open: true,
+                  message: `User ${body["uuid"]} Creation Successfully`,
+                  color: "success",
+              });
+          }
+          )
+          .catch(err => {
+              setSnackbar({
+                  open: true,
+                  message: `User ${err} Creation Failed`,
+                  color: "error",
+              });
+          }
+          );
+
+
   };
 
 
@@ -109,6 +142,8 @@ function Dashboard() {
               });
           });
   };
+
+  
 
 
 
