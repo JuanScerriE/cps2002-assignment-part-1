@@ -189,7 +189,7 @@ public class ConsultantControllerTests extends Tests {
         //pass customer id and put query function before booking to find consultant id, or
         //give option for them to pass consultant id themselves || name.
         Consultant consultant = new Consultant();
-        //set values of consultant for testing
+       
         consultant.setName("John");
         consultant.setType("Consultant");
         consultant.setSpeciality("Maths");
@@ -198,7 +198,19 @@ public class ConsultantControllerTests extends Tests {
         String consultantId = consultantsService.CreateConsultant(consultant);
         consultant.setUuid(consultantId);
 
-        mockMvc.perform(get("/getallconsultants/{speciality}", consultant.getSpeciality()))
+        Consultant consultant2 = new Consultant();
+       
+        consultant2.setName("John2");
+        consultant2.setType("Consultant");
+        consultant2.setSpeciality("Maths");
+        consultant2.setRate(102);
+
+        String consultantId2 = consultantsService.CreateConsultant(consultant2);
+        consultant2.setUuid(consultantId2);
+
+
+
+        mockMvc.perform(get("/getallconsultants/{speciality}","Mat"))
                 .andExpect(status().isOk())
                 .andReturn();
 

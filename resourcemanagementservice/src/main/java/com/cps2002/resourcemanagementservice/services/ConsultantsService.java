@@ -13,6 +13,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+//import HTTPEntity;
+
+import org.springframework.http.HttpEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,8 @@ public class ConsultantsService {
     ConsultantRepository consultantRepository;
     @Autowired
     BookingRepository bookingRepository;
-
+    @Autowired
+    RestTemplate restTemplate;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -85,19 +89,20 @@ public class ConsultantsService {
         return consultant;
 
     }
+    
     //get Consultants by speciality
     public ArrayList<Consultant> GetConsultantsBySpeciality(String speciality) {
         //get all consultants
         ArrayList<Consultant> consultants = new ArrayList<Consultant>();
         Iterable<ConsultantEntity> consultantEntities = consultantRepository.findAll();
-        System.out.println(consultantEntities);
+
         for (ConsultantEntity consultantEntity : consultantEntities) {
             Consultant consultant = mapper.map(consultantEntity, Consultant.class);
-            if(consultant.getSpeciality().equals(speciality)){
+            if(consultant.getSpeciality().contains(speciality)){
                 consultants.add(consultant);
             }
         }
-
+       System.out.println(consultants);
         return consultants;
 
     }
@@ -129,9 +134,12 @@ public class ConsultantsService {
            
                   String url = "http://TIMETABLING/internal/?consultantUuid=" + id;
                   //call url to delete consultant from all bookings
-                    RestTemplate restTemplate = new RestTemplate();
-                    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<String>() {
+                 
+                  //call url to put consultant id to null in all bookings
+                   HttpEntity<String> request = new HttpEntity<String>(id);
+                    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT ,request, new ParameterizedTypeReference<String>() {
                     });
+                  
               
 
             return response.getBody();
