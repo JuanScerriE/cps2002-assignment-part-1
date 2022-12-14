@@ -168,4 +168,8 @@ public class TimetablingServiceInternal implements TimetablingService {
 
         return Optional.of(bookingEntity.getUuid());
     }
+
+    public void unsafeDeleteAllBookings() {
+        bookingRepo.deleteAll();
+    }
 }

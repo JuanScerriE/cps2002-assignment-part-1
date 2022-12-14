@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -16,18 +19,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TimetablingServiceTests extends Tests {
+public class TimetablingControllerTests extends Tests {
     @Autowired
     private TimetablingServiceInternal timetablingService;
 
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
     @BeforeAll
     public void setup() {
-        timetablingService.unsafeDeleteAllBookings();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
     @BeforeEach
@@ -36,7 +47,11 @@ public class TimetablingServiceTests extends Tests {
     }
 
     @Test
-    public void testCreateBooking() {
+    public void contextLoads() {
+    }
+
+    @Test
+    public void testGetBooking() throws Exception {
         Booking booking = Booking.builder()
                 .consultantUuid(UUID.randomUUID().toString())
                 .customerUuid(UUID.randomUUID().toString())
@@ -50,23 +65,20 @@ public class TimetablingServiceTests extends Tests {
 
         booking.setUuid(uuid.get());
 
-        Optional<Booking> result = timetablingService.getBooking(booking.getUuid());
-
-        assertTrue(toJsonString(result.get()).equals(toJsonString(booking)));
-    }
-
-    @Test
-    public void testGetBookingWithNullUuid() throws Exception {
-        Optional<Booking> result = timetablingService.getBooking(null);
-
-        assertFalse(result.isPresent());
+        mockMvc.perform(get("/get?uuid=" + booking.getUuid()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid").value(booking.getUuid()))
+                .andExpect(jsonPath("$.consultantUuid").value(booking.getConsultantUuid()))
+                .andExpect(jsonPath("$.customerUuid").value(booking.getCustomerUuid()))
+                .andExpect(jsonPath("$.start").value(booking.getStart().toString()))
+                .andExpect(jsonPath("$.end").value(booking.getEnd().toString()));
     }
 
     @Test
     public void testGetBookingWithInvalidUuid() throws Exception {
-        Optional<Booking> result = timetablingService.getBooking("bogus uuid");
-
-        assertFalse(result.isPresent());
+        mockMvc.perform(get("/get?uuid=bogus-uuid"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
     }
 
     @Test
@@ -91,16 +103,14 @@ public class TimetablingServiceTests extends Tests {
             bookings.add(booking);
         }
 
-        List<Booking> result = timetablingService.getAllBookings(null, null).get();
-
-        System.out.println(toJsonString(bookings));
-        System.out.println(toJsonString(result));
-
-        assertTrue(toJsonString(bookings).equals(toJsonString(result)));
+        mockMvc.perform(get("/get-all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(10)));
     }
 
     @Test
-    public void getAllBookingsWithSpecifiedCustomerUuid() {
+    public void getAllBookingsWithSpecifiedCustomerUuid() throws Exception {
         List<Booking> sameCustomerBookings = new LinkedList<>();
 
         String customerUuid = UUID.randomUUID().toString();
@@ -137,13 +147,14 @@ public class TimetablingServiceTests extends Tests {
             timetablingService.unsafeCreateBooking(booking);
         }
 
-        List<Booking> result = timetablingService.getAllBookings(null, customerUuid).get();
-
-        assertTrue(toJsonString(sameCustomerBookings).equals(toJsonString(result)));
+        mockMvc.perform(get("/get-all-by-customer?customerUuid=" + customerUuid))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(sameCustomerBookings.size())));
     }
 
     @Test
-    public void getAllBookingsWithSpecifiedConsultantUuid() {
+    public void getAllBookingsWithSpecifiedConsultantUuid() throws Exception {
         List<Booking> sameConsultantBookings = new LinkedList<>();
 
         String consultantUuid = UUID.randomUUID().toString();
@@ -180,47 +191,14 @@ public class TimetablingServiceTests extends Tests {
             timetablingService.unsafeCreateBooking(booking);
         }
 
-        List<Booking> result = timetablingService.getAllBookings(consultantUuid, null).get();
-
-        assertTrue(toJsonString(sameConsultantBookings).equals(toJsonString(result)));
+        mockMvc.perform(get("/get-all-by-consultant?consultantUuid=" + consultantUuid))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(sameConsultantBookings.size())));
     }
 
     @Test
-    public void testDeleteBookingWithNullUuid() {
-        boolean deleted = timetablingService.deleteBooking(null);
-
-        assertFalse(deleted);
-    }
-
-    @Test
-    public void testDeleteBookingWithInvalidUuid() {
-        boolean deleted = timetablingService.deleteBooking("bogus uuid");
-
-        assertFalse(deleted);
-    }
-
-    @Test
-    public void testDeleteBookingLate() {
-        Booking booking = Booking.builder()
-                .consultantUuid(UUID.randomUUID().toString())
-                .customerUuid(UUID.randomUUID().toString())
-                .start(LocalDateTime.now().minusHours(5)
-                        .truncatedTo(ChronoUnit.SECONDS))
-                .end(LocalDateTime.now().minusHours(5)
-                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
-                .build();
-
-        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
-
-        booking.setUuid(uuid.get());
-
-        boolean deleted = timetablingService.deleteBooking(booking.getUuid());
-
-        assertFalse(deleted);
-    }
-
-    @Test
-    public void testDeleteBooking() {
+    public void testDeleteBookingLate() throws Exception {
         Booking booking = Booking.builder()
                 .consultantUuid(UUID.randomUUID().toString())
                 .customerUuid(UUID.randomUUID().toString())
@@ -234,8 +212,33 @@ public class TimetablingServiceTests extends Tests {
 
         booking.setUuid(uuid.get());
 
-        boolean deleted = timetablingService.deleteBooking(booking.getUuid());
+        mockMvc.perform(delete("/delete?uuid=" + booking.getUuid()))
+                .andExpect(status().isOk());
+    }
 
-        assertTrue(deleted);
+    @Test
+    public void testDeleteBooking() throws Exception {
+        Booking booking = Booking.builder()
+                .consultantUuid(UUID.randomUUID().toString())
+                .customerUuid(UUID.randomUUID().toString())
+                .start(LocalDateTime.now().plusDays(1).plusHours(1)
+                        .truncatedTo(ChronoUnit.SECONDS))
+                .end(LocalDateTime.now().plusDays(1).plusHours(1)
+                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .build();
+
+        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
+
+        booking.setUuid(uuid.get());
+
+        mockMvc.perform(delete("/delete?uuid=" + booking.getUuid()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDeleteBookingWithInvalidUuid() throws Exception {
+        mockMvc.perform(delete("/delete?uuid=bogus-uuid"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").exists());
     }
 }
