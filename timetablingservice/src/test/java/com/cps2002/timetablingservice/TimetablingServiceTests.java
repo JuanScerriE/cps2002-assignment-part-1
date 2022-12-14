@@ -36,35 +36,8 @@ public class TimetablingServiceTests extends Tests {
     }
 
     @Test
-    public void testCreateBooking() {
-        Booking booking = Booking.builder()
-                .consultantUuid(UUID.randomUUID().toString())
-                .customerUuid(UUID.randomUUID().toString())
-                .start(LocalDateTime.now().plusDays(1)
-                        .truncatedTo(ChronoUnit.SECONDS))
-                .end(LocalDateTime.now().plusDays(1)
-                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
-                .build();
-
-        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
-
-        booking.setUuid(uuid.get());
-
-        Optional<Booking> result = timetablingService.getBooking(booking.getUuid());
-
-        assertTrue(toJsonString(result.get()).equals(toJsonString(booking)));
-    }
-
-    @Test
     public void testGetBookingWithNullUuid() throws Exception {
         Optional<Booking> result = timetablingService.getBooking(null);
-
-        assertFalse(result.isPresent());
-    }
-
-    @Test
-    public void testGetBookingWithInvalidUuid() throws Exception {
-        Optional<Booking> result = timetablingService.getBooking("bogus uuid");
 
         assertFalse(result.isPresent());
     }
@@ -92,9 +65,6 @@ public class TimetablingServiceTests extends Tests {
         }
 
         List<Booking> result = timetablingService.getAllBookings(null, null).get();
-
-        System.out.println(toJsonString(bookings));
-        System.out.println(toJsonString(result));
 
         assertTrue(toJsonString(bookings).equals(toJsonString(result)));
     }
@@ -190,52 +160,5 @@ public class TimetablingServiceTests extends Tests {
         boolean deleted = timetablingService.deleteBooking(null);
 
         assertFalse(deleted);
-    }
-
-    @Test
-    public void testDeleteBookingWithInvalidUuid() {
-        boolean deleted = timetablingService.deleteBooking("bogus uuid");
-
-        assertFalse(deleted);
-    }
-
-    @Test
-    public void testDeleteBookingLate() {
-        Booking booking = Booking.builder()
-                .consultantUuid(UUID.randomUUID().toString())
-                .customerUuid(UUID.randomUUID().toString())
-                .start(LocalDateTime.now().minusHours(5)
-                        .truncatedTo(ChronoUnit.SECONDS))
-                .end(LocalDateTime.now().minusHours(5)
-                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
-                .build();
-
-        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
-
-        booking.setUuid(uuid.get());
-
-        boolean deleted = timetablingService.deleteBooking(booking.getUuid());
-
-        assertFalse(deleted);
-    }
-
-    @Test
-    public void testDeleteBooking() {
-        Booking booking = Booking.builder()
-                .consultantUuid(UUID.randomUUID().toString())
-                .customerUuid(UUID.randomUUID().toString())
-                .start(LocalDateTime.now().plusDays(1).plusHours(1)
-                        .truncatedTo(ChronoUnit.SECONDS))
-                .end(LocalDateTime.now().plusDays(1).plusHours(1)
-                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
-                .build();
-
-        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
-
-        booking.setUuid(uuid.get());
-
-        boolean deleted = timetablingService.deleteBooking(booking.getUuid());
-
-        assertTrue(deleted);
     }
 }
