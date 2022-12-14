@@ -30,6 +30,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 import { DataGrid } from '@mui/x-data-grid';
+import MDSnackbar from "../../components/MDSnackbar";
 // Data
 import authorsTableData from "layouts/tables/data/authorsTableData";
 import bookingsTableData from "layouts/tables/data/bookingsTableData";
@@ -66,6 +67,12 @@ function Tables() {
   const [update_booking_time, setUpdateBookingTime] = useState('');
   const [update_booking_consultant, setUpdateBookingConsultant] = useState('');
   const [update_booking_user, setUpdateBookingUser] = useState('');
+  const [snackbar, setSnackbar] = React.useState({
+    open: false,
+    message: "",
+    color: "success",
+  });
+  
 
 
   const [value, setValue] = React.useState(dayjs('2014-08-18T21:11:54'));
@@ -142,25 +149,37 @@ function Tables() {
       console.log(err);
     })
     
-   
-  
   }
+
   //booking services
   const FetchBookings=async()=>{
     let promise = await fetch("http://localhost:9000/timetabling-service/get-all",{method: "GET"});
     let result = await promise.json();
     console.log(result);
     console.log(JSON.stringify(result));
+    
+    //change start and end dates in result to string
+    result.forEach((booking)=>{
+      booking.start=booking.start.toString();
+    
+      booking.end=booking.end.toString();
+      console.log(booking);
+    })
+
     setBookings(result);
   }
 
   const handleDeleteBooking = async () => {
     console.log(selectedBooking);
     fetch(`http://localhost:9000/timetabling-service/delete?uuid=${selectedBooking.uuid}`, {  method: "DELETE"})
-    .then(()=>
-      setSelectedBooking(null),
-      FetchBookings()
-    ).catch((err)=>{
+    .then(async(res)=>{
+      setSelectedBooking(null);
+     const x= await res.json();
+
+     console.log(x);
+      
+      FetchBookings();
+    }).catch((err)=>{
       console.log(err);
     });
   }
@@ -178,16 +197,20 @@ function Tables() {
   // }
 
   const handleBookConsultant = async () => {
-   const startDate = value.toString();
+   const startDate = value.toISOString();
    //end date is start date + hours
-    const endDate = value.add(hours, 'hours').toString();
-    console.log(startDate);
-    console.log(endDate);
+    const endDate = value.add(hours, 'hours').toISOString();
+   
+    //remove .000Z from end date and start date
+     const start = startDate.substring(0, startDate.length - 5);
+    const end = endDate.substring(0, endDate.length - 5);
+
+
     const booking ={
       consultantUuid: selectedConsultant.uuid,
       customerUuid: selectedUser.uuid,
-      start: startDate,
-      end: endDate
+      start: start,
+      end: end
     }
     console.log(JSON.stringify(booking));
     let promise = await fetch("http://localhost:9000/timetabling-service/create", {  method: "POST",headers: {
@@ -195,14 +218,23 @@ function Tables() {
   }, body: JSON.stringify(booking)});
     let result = await promise.json();
     console.log(result);
-   
+    //snackbar showing result
+    
+    setSnackbar({
+      open: true,
+      message: `User ${result["uuid"]} Creation Successfully`,
+      color: "success",
+  });
+
+    FetchBookings();
 
   }
 
    useEffect(() => {
     FetchConsultants();
     FetchUsers();
-  }, [selectedConsultant, selectedUser]);
+    FetchBookings();
+  }, [selectedConsultant, selectedUser,selectedBooking]);
 
   const columns = [
     { field: 'uuid', headerName: 'ID', width: 350 },
@@ -220,8 +252,8 @@ function Tables() {
     { field: 'uuid', headerName: 'ID', width: 350 },
     { field: 'consultantUuid', headerName: 'Consultant ID', width: 150 },
     { field: 'customerUuid', headerName: 'Customer ID', width: 150 },
-    { field: 'startDate', headerName: 'Start Date', width: 150 },
-    { field: 'endDate', headerName: 'End Date', width: 150 },
+    { field: 'start', headerName: 'Start Date', width: 200 },
+    { field: 'end', headerName: 'End Date', width: 200 },
   ]
   let booking_rows = bookings;
   let user_rows = users;
@@ -231,6 +263,12 @@ function Tables() {
   return (
     
     <DashboardLayout>
+        <MDSnackbar
+          open={snackbar.open}
+          title={snackbar.message}
+          color={snackbar.color}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+      />
       <DashboardNavbar />
       CONSULTANTS TABLE
      
@@ -371,21 +409,12 @@ function Tables() {
           
       />
       {
-        selectedConsultant && !selectedUser &&
+        selectedBooking  &&
         <div style={{display:'flex',width:'100%',flexDirection:"row"}}>
-          <h3  style={{cursor:'pointer'}}>Delete</h3>
-           <div style={{display:'flex',flexDirection:'column',marginLeft:'5%'}}>
-            <h3>Update</h3>
-            {/* <input type="text" placeholder={selectedConsultant.name} value={update_name} onChange={(e)=>{setUpdateBookingConsultant(e.target.value)}} style={{marginTop:'2%'}} />
-            <input type="text" placeholder={selectedConsultant.type} value={update_type} onChange={(e)=>{setUpdateBookingDate(e.target.value)}} style={{marginTop:'2%'}}/>
-            <input type="text" placeholder={selectedConsultant.speciality} value={update_speciality} onChange={(e)=>{setUpdateSpeciality(e.target.value)}} style={{marginTop:'2%'}}/>
-            <input type="number" placeholder={selectedConsultant.rate} value={update_rate} onChange={(e)=>{setUpdateRate(e.target.value)}} style={{marginTop:'2%'}}/> */}
-             
-             
-              
-            <button style={{marginTop:'2%'}}>Submit</button>
+          <h3 onClick={handleDeleteBooking} style={{cursor:'pointer'}}>Delete</h3>
+          
 
-           </div>
+          
         </div>
 
       }

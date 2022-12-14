@@ -98,11 +98,10 @@ public class Booking {
         //override to string method to return consultant object
 
         return "Consultant{" + "\n" +
-                "Customer Id\t" + customerId + "\n" +
-                "Consultant Id\t" + consultantId + "\n" +
-                "Date\t" + date + "\n" +
-                "Time\t" + time + "\n" +
-                "Hours\t" + hours + "\n" +
+                "Customer Id\t" + customerUuid + "\n" +
+                "Consultant Id\t" + consultantUuid + "\n" +
+                "StartDate\t" + start.toString()  + "\n" +
+                "EndDate\t" + end.toString() + "\n" +
                 "ID\t" + uuid +
                 '}';
     }

@@ -8,7 +8,11 @@ import com.cps2002.resourcemanagementservice.services.models.Booking;
 import com.cps2002.resourcemanagementservice.services.models.Consultant;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,25 +85,38 @@ public class ConsultantsService {
         return consultant;
 
     }
+    //get Consultants by speciality
+    public ArrayList<Consultant> GetConsultantsBySpeciality(String speciality) {
+        //get all consultants
+        ArrayList<Consultant> consultants = new ArrayList<Consultant>();
+        Iterable<ConsultantEntity> consultantEntities = consultantRepository.findAll();
+        System.out.println(consultantEntities);
+        for (ConsultantEntity consultantEntity : consultantEntities) {
+            Consultant consultant = mapper.map(consultantEntity, Consultant.class);
+            if(consultant.getSpeciality().equals(speciality)){
+                consultants.add(consultant);
+            }
+        }
+
+        return consultants;
+
+    }
+
+    // public List<Booking> getBookingsByConsultantId(String consultantId) {
+    //     List<Booking> bookings = new ArrayList<>();
+
+    //     String url = "http://TIMETABLING/get-all-by-consultant?consultantUuid=" + consultantId;
+    //     RestTemplate restTemplate = new RestTemplate();
+    //     ResponseEntity<List<Booking>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Booking>>() {
+    //     });
+    //     bookings = response.getBody();
+    //     return bookings;
+    // }
 
     public String DeleteConsultant(String id) {
         //delete consultant
         consultantRepository.deleteById(id);
         ConsultantEntity consultantEntity = consultantRepository.findById(id).orElse(null);
-
-        
-        
-        public List<Booking> getBookingsByConsultantId(String consultantId) {
-            List<Booking> bookings = new ArrayList<>();
-                     
-            String url = 'http://TIMETABLING/get-all-by-consultant?consultantUuid=' + consultantId;
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<List<Booking>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Booking>>() {
-            });
-            bookings = response.getBody();
-            return bookings;
-        }
-
 
         if (consultantEntity == null) {
               
@@ -109,31 +126,22 @@ public class ConsultantsService {
            //get all bookings related to consultant id with http request from timetabling service
               //update all bookings related to consultant id with http request from timetabling service
               
-              getBookingsByConsultantId(id).forEach(booking -> {
-                  booking.setConsultantUuid(null);
-                  String url = 'http://TIMETABLING/update-booking';
-                  RestTemplate restTemplate = new RestTemplate();
-                  restTemplate.postForObject(url, booking, Booking.class);
-              });
+           
+                  String url = "http://TIMETABLING/internal/?consultantUuid=" + id;
+                  //call url to delete consultant from all bookings
+                    RestTemplate restTemplate = new RestTemplate();
+                    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, null, new ParameterizedTypeReference<String>() {
+                    });
+              
 
-            return id;
+            return response.getBody();
         } else {
             return null;
         }
 
     }
 
-    public String DeleteBooking(String id) {
-        //delete consultant
-        bookingRepository.deleteById(id);
-        BookingEntity bookingEntity = bookingRepository.findById(id).orElse(null);
-        if (bookingEntity == null) {
 
-            return id;
-        } else {
-            return null;
-        }
-    }
 
     public String UpdateConsultant(String Id, Consultant consultant) {
         //update consultant
@@ -149,17 +157,6 @@ public class ConsultantsService {
 
     }
 
-    public ArrayList<Booking> GetBookings() {
 
-        ArrayList<Booking> bookings = new ArrayList<Booking>();
-        Iterable<BookingEntity> bookingEntities = bookingRepository.findAll();
-        for (BookingEntity bookingEntity : bookingEntities) {
-            Booking booking = mapper.map(bookingEntity, Booking.class);
-            bookings.add(booking);
-        }
-        return bookings;
-
-
-    }
 
 }

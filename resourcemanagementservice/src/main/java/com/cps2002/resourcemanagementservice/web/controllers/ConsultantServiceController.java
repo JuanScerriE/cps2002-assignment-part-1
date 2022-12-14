@@ -46,23 +46,6 @@ public class ConsultantServiceController {
         return ResponseEntity.ok(new CreateConsultantResponse(consultantId));
     }
 
-
-    @PostMapping(value = "new_booking", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookConsultantResponse> submit( @RequestBody BookConsultantRequest request) {
-
-
-        //create order instance 
-        Booking consultantBooking = mapper.map(request.getValue(), Booking.class);
-
-        System.out.println(consultantBooking.toString());
-        String bookingId = consultantsService.BookConsultant(consultantBooking);
-        consultantBooking.setUuid(bookingId);
-
-        return ResponseEntity.ok(new BookConsultantResponse(bookingId));
-
-
-    }
-
     @GetMapping(value = "consultant/{consultantId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetConsultantResponse> get(@PathVariable String consultantId) {
 
@@ -108,17 +91,6 @@ public class ConsultantServiceController {
         return ResponseEntity.ok(deleteConsultantResponse);
     }
 
-    @DeleteMapping(value = "/deleteB/{bookingId}")
-    public ResponseEntity<DeleteBookingResponse> deletePostB(@PathVariable String bookingId) {
-        String isRemoved;
-        isRemoved = consultantsService.DeleteBooking(bookingId);
-
-        if (isRemoved == null) {
-            return ResponseEntity.notFound().build();
-        }
-        DeleteBookingResponse deleteBookingResponse = mapper.map(isRemoved, DeleteBookingResponse.class);
-        return ResponseEntity.ok(deleteBookingResponse);
-    }
 
     @PostMapping(value = "/update_consultant", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UpdateConsultantResponse> update( @RequestBody UpdateConsultantRequest request) {
@@ -133,24 +105,30 @@ public class ConsultantServiceController {
         return ResponseEntity.ok(new UpdateConsultantResponse(consultantId));
     }
 
-    @GetMapping(value = "getallbookings", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetBookingsResponse> getAllB() {
+    //get all consultants with a specific speciality
+    @GetMapping(value = "getallconsultants/{speciality}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<GetConsultantResponse>> getAllC(@PathVariable String speciality) {
 
         //ConsultantService.java includes all functions/operations
         //this gets specific consultant, you can format to any type of query you'd like
 
-        ArrayList<Booking> bookings = consultantsService.GetBookings();
-        ;
+        ArrayList<Consultant> consultants = consultantsService.GetConsultantsBySpeciality(speciality);
+        
 
-        System.out.println(bookings);
-
-        if (bookings == null) {
+        if (consultants == null) {
             return ResponseEntity.notFound().build();
         }
 
-        GetBookingsResponse getBookingsResponse = mapper.map(bookings, GetBookingsResponse.class);
-        return ResponseEntity.ok(getBookingsResponse);
+
+        LinkedList<GetConsultantResponse> response = new LinkedList<>();
+
+        for (Consultant consultant : consultants) {
+            response.add(mapper.map(consultant, GetConsultantResponse.class));
+        }
+
+        return ResponseEntity.ok(response);
     }
+
 
 
 }
