@@ -72,6 +72,7 @@ function Tables() {
     message: "",
     color: "success",
   });
+  const [search,setSearch]=useState('');
   
 
 
@@ -183,18 +184,19 @@ function Tables() {
       console.log(err);
     });
   }
- 
-  // const handleUpdateBooking = async () => {
-  //   const startDate = update_booking_date.toISOString();
-  //   const endDate = update_booking_date.add(hours, 'hours').toISOString();
-  //   let promise = await fetch("http://localhost:9000/timetabling-service/update", {  method: "PUT",headers: {
-  //     'Content-Type': 'application/json',
 
-  // }, body: JSON.stringify({uuid:selectedBooking.uuid,consultantUuid: update_booking_consultant.uuid,customerUuid: update_booking_user.uuid,startDate: startDate,endDate: endDate})});
-  //   let result = await promise.json();
-  //   console.log(result);
-  //   FetchBookings();
-  // }
+  const handleSearchConsultant = async () => {
+    console.log(search);
+    let promise = await fetch(`http://localhost:9000/resource-management-service/getallconsultants/${search}`,{method: "GET"});
+    let result = await promise.json();
+    console.log(result);
+    console.log(JSON.stringify(result));
+    setConsultants(result);
+
+  }
+
+ 
+ 
 
   const handleBookConsultant = async () => {
    const startDate = value.toISOString();
@@ -269,7 +271,25 @@ function Tables() {
           color={snackbar.color}
           onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
-      <DashboardNavbar />
+      
+      <div sx={{display:'flex',flexDirection:'row'}}>
+      <TextField
+        sx={{ width: 300 }}
+        label="Search Speciality"
+        variant="outlined"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+    
+      <button
+        variant="contained"
+        onClick={handleSearchConsultant}
+        sx={{ ml: 2 }}
+      >
+        Search
+      </button>
+      </div>
+
       CONSULTANTS TABLE
      
  <DataGrid
