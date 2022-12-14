@@ -53,32 +53,7 @@ public class ConsultantControllerTests extends Tests {
 
     }
 
-    @Test
-    public void testBookConsultant() throws Exception {
-        BookConsultantRequest request = new BookConsultantRequest();
 
-
-        //pass customer id and put query function before booking to find consultant id, or
-        //give option for them to pass consultant id themselves || name.
-        Booking booking = new Booking();
-        booking.setCustomerId("123");
-        booking.setConsultantId("456");
-        booking.setDate("01/01/2021");
-        booking.setTime("12:00");
-        booking.setHours(1);
-
-
-        //write data that passes in functions
-
-        request.setValue(booking);
-
-        mockMvc.perform(post("/new_booking")
-                        .content(asJsonString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                )
-                .andExpect(status().isOk());
-
-    }
 
 
     @Test
@@ -200,64 +175,44 @@ public class ConsultantControllerTests extends Tests {
 
     }
 
-    //test for get all bookings
-    @Test
-    public void testGetAllBookings() throws Exception {
-
-        //pass customer id and put query function before booking to find consultant id, or
-        //give option for them to pass consultant id themselves || name.
-        Booking booking = new Booking();
-        booking.setCustomerId("123");
-        booking.setConsultantId("456");
-        booking.setDate("01/01/2021");
-        booking.setTime("12:00");
-        booking.setHours(1);
-
-        Booking booking2 = new Booking();
-        booking2.setCustomerId("124443");
-        booking2.setConsultantId("456444");
-        booking2.setDate("01/01/2022");
-        booking2.setTime("14:00");
-        booking2.setHours(2);
-
-        String bookingId = consultantsService.BookConsultant(booking);
-        String bookingId2 = consultantsService.BookConsultant(booking2);
-        booking.setUuid(bookingId);
-        booking2.setUuid(bookingId2);
-        //create bookings arraylist
-        ArrayList<Booking> bookings = new ArrayList<Booking>();
-        bookings.add(booking);
-        bookings.add(booking2);
 
 
-        mockMvc.perform(get("/getallbookings"))
-                .andExpect(status().isOk())
-                //expect check whole  arraylist in one line at once
-                .andReturn();
-
-    }
 
 
     //test delete booking
 
+
+    //test get consultants by speciality 
     @Test
-    public void testDeleteBooking() throws Exception {
+    public void testGetConsultantsBySpeciality() throws Exception {
 
         //pass customer id and put query function before booking to find consultant id, or
         //give option for them to pass consultant id themselves || name.
+        Consultant consultant = new Consultant();
+       
+        consultant.setName("John");
+        consultant.setType("Consultant");
+        consultant.setSpeciality("Maths");
+        consultant.setRate(10);
 
-        Booking booking = new Booking();
-        booking.setCustomerId("123");
-        booking.setConsultantId("456");
-        booking.setDate("01/01/2021");
-        booking.setTime("12:00");
-        booking.setHours(1);
+        String consultantId = consultantsService.CreateConsultant(consultant);
+        consultant.setUuid(consultantId);
 
-        String bookingId = consultantsService.BookConsultant(booking);
-        booking.setUuid(bookingId);
+        Consultant consultant2 = new Consultant();
+       
+        consultant2.setName("John2");
+        consultant2.setType("Consultant");
+        consultant2.setSpeciality("Maths");
+        consultant2.setRate(102);
 
-        mockMvc.perform(delete("/deleteB/{bookingId}", bookingId))
-                .andExpect(status().isOk());
+        String consultantId2 = consultantsService.CreateConsultant(consultant2);
+        consultant2.setUuid(consultantId2);
+
+
+
+        mockMvc.perform(get("/getallconsultants/{speciality}","Mat"))
+                .andExpect(status().isOk())
+                .andReturn();
 
     }
 
