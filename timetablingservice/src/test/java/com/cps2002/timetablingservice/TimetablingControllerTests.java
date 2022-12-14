@@ -20,8 +20,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -240,5 +240,49 @@ public class TimetablingControllerTests extends Tests {
         mockMvc.perform(delete("/delete?uuid=bogus-uuid"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists());
+    }
+
+
+    @Test
+    public void testNullCustomer() throws Exception {
+        Booking booking = Booking.builder()
+                .consultantUuid(UUID.randomUUID().toString())
+                .customerUuid(UUID.randomUUID().toString())
+                .start(LocalDateTime.now().plusDays(1).plusHours(1)
+                        .truncatedTo(ChronoUnit.SECONDS))
+                .end(LocalDateTime.now().plusDays(1).plusHours(1)
+                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .build();
+
+        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
+
+        booking.setUuid(uuid.get());
+
+        mockMvc.perform(put("/internal/null-customer?customerUuid=" + booking.getCustomerUuid()))
+                .andExpect(status().isOk());
+
+        assertNull(timetablingService.getBooking(booking.getUuid()).get().getCustomerUuid());
+    }
+
+    @Test
+    public void testNullConsultant() throws Exception {
+        Booking booking = Booking.builder()
+                .consultantUuid(UUID.randomUUID().toString())
+                .customerUuid(UUID.randomUUID().toString())
+                .start(LocalDateTime.now().plusDays(1).plusHours(1)
+                        .truncatedTo(ChronoUnit.SECONDS))
+                .end(LocalDateTime.now().plusDays(1).plusHours(1)
+                        .plusHours(1).truncatedTo(ChronoUnit.SECONDS))
+                .build();
+
+
+        Optional<String> uuid = timetablingService.unsafeCreateBooking(booking);
+
+        booking.setUuid(uuid.get());
+
+        mockMvc.perform(put("/internal/null-consultant?consultantUuid=" + booking.getConsultantUuid()))
+                .andExpect(status().isOk());
+
+        assertNull(timetablingService.getBooking(booking.getUuid()).get().getConsultantUuid());
     }
 }

@@ -7,8 +7,16 @@ import java.util.Optional;
 
 public interface TimetablingService {
     boolean canBook(Booking booking);
+
     Optional<String> createBooking(Booking booking);
+
     boolean deleteBooking(String uuid);
+
     Optional<Booking> getBooking(String uuid);
+
     Optional<List<Booking>> getAllBookings(String consultantUuid, String customerUuid);
+
+    boolean nullConsultantInBookings(String consultantUuid);
+
+    boolean nullCustomerInBookings(String customerUuid);
 }

@@ -5,7 +5,10 @@ import com.cps2002.timetablingservice.services.internal.models.Booking;
 import com.cps2002.timetablingservice.web.controllers.dto._Interval;
 import com.cps2002.timetablingservice.web.controllers.requests.CanBookRequest;
 import com.cps2002.timetablingservice.web.controllers.requests.CreateBookingRequest;
-import com.cps2002.timetablingservice.web.controllers.responses.*;
+import com.cps2002.timetablingservice.web.controllers.responses.CanBookResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.CreateBookingResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.DeleteBookingResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.GetBookingResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -140,5 +143,21 @@ public class TimetablingController {
         Optional<List<Booking>> bookings = timetablingService.getAllBookings(null, customerUuid);
 
         return handleGetAll(bookings);
+    }
+
+    @PutMapping(value = "/internal/null-customer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(value = "http:/CUSTOMERMANAGEMENT")
+    public ResponseEntity<?> internalNullCustomer(@RequestParam String customerUuid) {
+        timetablingService.nullCustomerInBookings(customerUuid);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/internal/null-consultant", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(value = "http:/RESOURCEMANAGEMENT")
+    public ResponseEntity<?> internalNullConsultant(@RequestParam String consultantUuid) {
+        timetablingService.nullConsultantInBookings(consultantUuid);
+
+        return ResponseEntity.ok().build();
     }
 }

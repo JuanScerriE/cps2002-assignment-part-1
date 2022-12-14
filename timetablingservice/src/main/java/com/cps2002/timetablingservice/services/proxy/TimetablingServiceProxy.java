@@ -43,4 +43,14 @@ public class TimetablingServiceProxy implements TimetablingService {
     public Optional<List<Booking>> getAllBookings(String consultantUuid, String customerUuid) {
         return timeTablingService.getAllBookings(consultantUuid, customerUuid);
     }
+
+    @Override
+    public boolean nullConsultantInBookings(String consultantUuid) {
+        return timeTablingService.nullConsultantInBookings(consultantUuid);
+    }
+
+    @Override
+    public boolean nullCustomerInBookings(String customerUuid) {
+        return timeTablingService.nullCustomerInBookings(customerUuid);
+    }
 }

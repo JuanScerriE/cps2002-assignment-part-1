@@ -158,6 +158,37 @@ public class TimetablingServiceInternal implements TimetablingService {
         return Optional.empty();
     }
 
+    // non-exposed business logic
+    public boolean nullCustomerInBookings(String customerUuid) {
+        List<Booking> customerBookings = getAllBookings(null, customerUuid).get();
+
+        for (Booking booking : customerBookings) {
+            BookingEntity bookingEntity = mapper.map(booking, BookingEntity.class);
+
+            bookingEntity.setCustomerUuid(null);
+
+            bookingRepo.save(bookingEntity);
+        }
+
+        return true;
+    }
+
+
+    public boolean nullConsultantInBookings(String consultantUuid) {
+        List<Booking> consultantBookings = getAllBookings(consultantUuid, null).get();
+
+        for (Booking booking : consultantBookings) {
+            BookingEntity bookingEntity = mapper.map(booking, BookingEntity.class);
+
+            bookingEntity.setConsultantUuid(null);
+
+            bookingRepo.save(bookingEntity);
+        }
+
+        return true;
+    }
+
+
     // helper methods to facilitate testing
     public Optional<String> unsafeCreateBooking(Booking booking) {
         BookingEntity bookingEntity = mapper.map(booking, BookingEntity.class);
