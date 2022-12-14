@@ -65,11 +65,8 @@ public class ConsultantServiceController {
 
     @GetMapping(value = "consultant/{consultantId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetConsultantResponse> get(@PathVariable String consultantId) {
-
-
         Consultant consultant = consultantsService.GetConsultant(consultantId);
-        ;
-        System.out.println(consultant + "this is it");
+
         if (consultant == null) {
             return ResponseEntity.notFound().build();
         } else {

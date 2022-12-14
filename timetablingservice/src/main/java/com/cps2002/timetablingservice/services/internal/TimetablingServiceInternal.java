@@ -6,9 +6,10 @@ import com.cps2002.timetablingservice.services.TimetablingService;
 import com.cps2002.timetablingservice.services.internal.models.Booking;
 import com.cps2002.timetablingservice.services.internal.models.Consultant;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -20,18 +21,15 @@ import java.util.UUID;
 @Service
 @Qualifier("internal")
 public class TimetablingServiceInternal implements TimetablingService {
-    private final ModelMapper mapper;
-    private final BookingRepository bookingRepo;
-    private final RestTemplate rest;
+    @Autowired
+    private ModelMapper mapper;
+    @Autowired
+    private BookingRepository bookingRepo;
+    @Autowired
+    private RestTemplate rest;
 
     private final static double START_OF_WORK_HOURS = 8;
     private final static double END_OF_WORK_HOURS = 17;
-
-    public TimetablingServiceInternal(ModelMapper mapper, BookingRepository bookingRepo, RestTemplate rest) {
-        this.mapper = mapper;
-        this.bookingRepo = bookingRepo;
-        this.rest = rest;
-    }
 
     private double getTimeFromDate(LocalDateTime date) {
         return date.getHour() + date.getMinute() / 60.0;
@@ -64,15 +62,18 @@ public class TimetablingServiceInternal implements TimetablingService {
         // consultant with specified uuid must exist
         try {
             rest.getForObject("http://RESOURCEMANAGEMENT/consultant/" + booking.getConsultantUuid(), Consultant.class);
-        } catch (RestClientException exception) {
+        } catch (HttpClientErrorException exception) {
             exception.printStackTrace();
+
             return false;
         }
 
-        // check for no conflicting bookings
+        // check for no conflicting consultant bookings
         if (!bookingRepo.canBook(booking.getConsultantUuid(), booking.getStart()).isEmpty()) {
             return false;
         }
+
+        // TODO: add same checks for customer
 
         return true;
     }

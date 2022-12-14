@@ -1,7 +1,6 @@
 package com.cps2002.customermanagementservice.services;
 
 import com.cps2002.customermanagementservice.data.entities.CustomerEntity;
-import com.cps2002.customermanagementservice.data.repositories.BookedConsultantRepository;
 import com.cps2002.customermanagementservice.data.repositories.CustomerRepository;
 import com.cps2002.customermanagementservice.services.models.Customer;
 import org.modelmapper.ModelMapper;
@@ -17,12 +16,10 @@ import java.util.UUID;
 public class CustomerManagementService {
     private final ModelMapper mapper;
     private final CustomerRepository customerRepo;
-    private final BookedConsultantRepository bookedConsultantRepo;
 
-    public CustomerManagementService(ModelMapper mapper, CustomerRepository customerRepo, BookedConsultantRepository bookedConsultantRepo) {
+    public CustomerManagementService(ModelMapper mapper, CustomerRepository customerRepo) {
         this.mapper = mapper;
         this.customerRepo = customerRepo;
-        this.bookedConsultantRepo = bookedConsultantRepo;
     }
 
     public Optional<String> createCustomer(Customer customer) {
@@ -54,10 +51,18 @@ public class CustomerManagementService {
         return optionalCustomer;
     }
 
-    public Optional<List<Customer>> getAllCustomers() {
+    public Optional<List<Customer>> getAllCustomers(String preference) {
         List<Customer> customers = new LinkedList<>();
 
-        for (CustomerEntity customerEntity : customerRepo.findAll()) {
+        if (preference == null) {
+            for (CustomerEntity customerEntity : customerRepo.findAll()) {
+                customers.add(mapper.map(customerEntity, Customer.class));
+            }
+
+            return Optional.of(customers);
+        }
+
+        for (CustomerEntity customerEntity : customerRepo.findAllLikeSpecialityPreference(preference)) {
             customers.add(mapper.map(customerEntity, Customer.class));
         }
 

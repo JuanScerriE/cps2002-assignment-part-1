@@ -2,8 +2,6 @@ package com.cps2002.customermanagementservice.data.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Set;
 
 @Entity
 public class CustomerEntity {
@@ -11,9 +9,6 @@ public class CustomerEntity {
     private String uuid;
     private String name;
     private String specialityPreference;
-
-    @OneToMany(mappedBy = "customer")
-    private Set<BookedConsultantEntity> bookedConsultants;
 
     public String getUuid() {
         return uuid;
@@ -37,13 +32,5 @@ public class CustomerEntity {
 
     public void setSpecialityPreference(String specialityPreference) {
         this.specialityPreference = specialityPreference;
-    }
-
-    public Set<BookedConsultantEntity> getBookedConsultants() {
-        return bookedConsultants;
-    }
-
-    public void setBookedConsultants(Set<BookedConsultantEntity> bookedConsultants) {
-        this.bookedConsultants = bookedConsultants;
     }
 }

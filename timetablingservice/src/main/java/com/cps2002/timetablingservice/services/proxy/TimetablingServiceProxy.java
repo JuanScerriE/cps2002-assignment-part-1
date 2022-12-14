@@ -18,7 +18,6 @@ public class TimetablingServiceProxy implements TimetablingService {
         this.timeTablingService = timetablingService;
     }
 
-
     @Override
     public boolean canBook(Booking booking) {
         return timeTablingService.canBook(booking);

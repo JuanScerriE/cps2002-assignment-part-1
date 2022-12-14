@@ -5,6 +5,7 @@ public class Consultant {
     private String name;
     private String type;
     private String speciality;
+    private int rate;
 
     public String getUuid() {
         return uuid;
@@ -45,6 +46,4 @@ public class Consultant {
     public void setRate(int rate) {
         this.rate = rate;
     }
-
-    private int rate;
 }

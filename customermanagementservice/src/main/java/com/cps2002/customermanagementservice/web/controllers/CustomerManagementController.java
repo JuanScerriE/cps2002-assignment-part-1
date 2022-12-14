@@ -51,13 +51,9 @@ public class CustomerManagementController {
         return ResponseEntity.ok(mapper.map(customer.get(), GetCustomerResponse.class));
     }
 
-
-    @GetMapping(value = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAll() {
-        Optional<List<Customer>> customers = customerManagementService.getAllCustomers();
-
+    private ResponseEntity<?> handleGetAll(Optional<List<Customer>> customers) {
         if (!customers.isPresent()) {
-            return Error.message("user with specified uuid does not exist");
+            return Error.message("an unexpected error has occurred");
         }
 
         List<GetCustomerResponse> customersResponse = new LinkedList<>();
@@ -67,6 +63,21 @@ public class CustomerManagementController {
         }
 
         return ResponseEntity.ok(customersResponse);
+    }
+
+    @GetMapping(value = "get-all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAll() {
+        Optional<List<Customer>> customers = customerManagementService.getAllCustomers(null);
+
+        return handleGetAll(customers);
+    }
+
+
+    @GetMapping(value = "get-all-by-preference", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllByPreference(@RequestParam String specialityPreference) {
+        Optional<List<Customer>> customers = customerManagementService.getAllCustomers(specialityPreference);
+
+        return handleGetAll(customers);
     }
 
     @DeleteMapping(value = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -90,12 +101,4 @@ public class CustomerManagementController {
 
         return ResponseEntity.ok().build();
     }
-
-    @PutMapping(value = "add-booked-consultant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addBookedConsultant(@RequestBody CreateCustomerRequest request) {
-        return null;
-    }
-
-
-
 }
