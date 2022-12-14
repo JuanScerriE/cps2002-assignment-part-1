@@ -1,11 +1,14 @@
 package com.cps2002.timetablingservice.web.controllers;
 
 import com.cps2002.timetablingservice.services.TimetablingService;
-import com.cps2002.timetablingservice.services.models.Booking;
+import com.cps2002.timetablingservice.services.internal.models.Booking;
 import com.cps2002.timetablingservice.web.controllers.dto._Interval;
 import com.cps2002.timetablingservice.web.controllers.requests.CanBookRequest;
 import com.cps2002.timetablingservice.web.controllers.requests.CreateBookingRequest;
-import com.cps2002.timetablingservice.web.controllers.responses.*;
+import com.cps2002.timetablingservice.web.controllers.responses.CanBookResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.CreateBookingResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.DeleteBookingResponse;
+import com.cps2002.timetablingservice.web.controllers.responses.GetBookingResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +32,7 @@ public class TimetablingController {
     }
 
     private _Interval<LocalDateTime> parseStringTimestamps(String start, String end) {
-        return new _Interval<>(LocalDateTime.parse(start), LocalDateTime.parse(end));
+        return new _Interval<>(LocalDateTime.parse(start).truncatedTo(ChronoUnit.SECONDS), LocalDateTime.parse(end).truncatedTo(ChronoUnit.SECONDS));
     }
 
     @PostMapping(value = "can-book", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -139,5 +143,21 @@ public class TimetablingController {
         Optional<List<Booking>> bookings = timetablingService.getAllBookings(null, customerUuid);
 
         return handleGetAll(bookings);
+    }
+
+    @PutMapping(value = "/internal/null-customer", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(value = "http:/CUSTOMERMANAGEMENT")
+    public ResponseEntity<?> internalNullCustomer(@RequestParam String customerUuid) {
+        timetablingService.nullCustomerInBookings(customerUuid);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/internal/null-consultant", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(value = "http:/RESOURCEMANAGEMENT")
+    public ResponseEntity<?> internalNullConsultant(@RequestParam String consultantUuid) {
+        timetablingService.nullConsultantInBookings(consultantUuid);
+
+        return ResponseEntity.ok().build();
     }
 }

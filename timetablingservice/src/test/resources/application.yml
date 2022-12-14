@@ -1,0 +1,19 @@
+api:
+  version: 0.0.1
+
+server:
+  port: 9000
+  servlet:
+    contextPath: /
+
+spring:
+  h2:
+    console.enabled: true
+  datasource:
+    url: jdbc:h2:mem:test_db
+    username: root
+    password: local
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
