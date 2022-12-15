@@ -73,6 +73,7 @@ function Tables() {
     color: "success",
   });
   const [search,setSearch]=useState('');
+  const [search_user,setSearchUser]=useState('');
   
 
 
@@ -192,7 +193,13 @@ function Tables() {
     console.log(result);
     console.log(JSON.stringify(result));
     setConsultants(result);
-
+  }
+  const handleSearchUser = async () => {
+    let promise = await fetch(`http://localhost:9000/customer-management-service/get-all-by-preference?specialityPreference=${search_user}`,{method: "GET"});
+    let result = await promise.json();
+    console.log(result);
+    console.log(JSON.stringify(result));
+    setUsers(result);
   }
 
  
@@ -272,7 +279,7 @@ function Tables() {
           onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
       
-      <div sx={{display:'flex',flexDirection:'row'}}>
+      <div style={{display:'flex',flexDirection:'row',marginTop:'3%',marginBottom:'2%'}}>
       <TextField
         sx={{ width: 300 }}
         label="Search Speciality"
@@ -338,6 +345,23 @@ function Tables() {
         </div>
 
       }
+        <div style={{display:'flex',flexDirection:'row',marginTop:'3%',marginBottom:'2%'}}>
+      <TextField
+        sx={{ width: 300 }}
+        label="Search Preference"
+        variant="outlined"
+        value={search_user}
+        onChange={(e) => setSearchUser(e.target.value)}
+      />
+    
+      <button
+        variant="contained"
+        onClick={handleSearchUser}
+        sx={{ ml: 2 }}
+      >
+        Search
+      </button>
+      </div>
 
       USERS TABLE
       <DataGrid

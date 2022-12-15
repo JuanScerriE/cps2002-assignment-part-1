@@ -1,11 +1,17 @@
 package com.cps2002.resourcemanagementservice.services.models;
 
+import com.cps2002.resourcemanagementservice.services.strategy.CommisionStrategy;
+
 public class Consultant {
     private String uuid;
     private String name;
     private String type;
     private String speciality;
     private int rate;
+    private double companyRate;
+
+
+    
 
     public String getUuid() {
         return uuid;
@@ -47,6 +53,18 @@ public class Consultant {
         this.rate = rate;
     }
 
+    public double getCompanyRate() {
+        return companyRate;
+    }
+
+    public void setCompanyRate(double companyRate) {
+        this.companyRate = companyRate;
+    }
+
+    public double Commision(CommisionStrategy commisionStrategy){
+        return commisionStrategy.commision(rate);
+    }
+
     @Override
     public String toString() {
         //override to string method to return consultant object
@@ -57,6 +75,7 @@ public class Consultant {
                 "Speciality" + speciality + "\n" +
                 "Rate" + rate + "\n" +
                 "Id" + uuid + "\n" +
+                "Company Rate" + companyRate + "\n" +
                 '}';
     }
 

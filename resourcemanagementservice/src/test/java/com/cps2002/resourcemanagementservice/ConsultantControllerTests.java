@@ -1,9 +1,7 @@
 package com.cps2002.resourcemanagementservice;
 
 import com.cps2002.resourcemanagementservice.services.ConsultantsService;
-import com.cps2002.resourcemanagementservice.services.models.Booking;
 import com.cps2002.resourcemanagementservice.services.models.Consultant;
-import com.cps2002.resourcemanagementservice.web.controllers.requests.BookConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.CreateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.UpdateConsultantRequest;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,9 +32,9 @@ public class ConsultantControllerTests extends Tests {
 
         Consultant consultant = new Consultant();
         consultant.setName("John");
-        consultant.setType("Consultant");
+        consultant.setType("Senior");
         consultant.setSpeciality("Maths");
-        consultant.setRate(10);
+        consultant.setRate(100);
 
 
         request.setValue(consultant);
@@ -50,6 +47,8 @@ public class ConsultantControllerTests extends Tests {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                 )
                 .andExpect(status().isOk());
+
+                
 
     }
 

@@ -36,14 +36,16 @@ public class ConsultantServiceController {
     public ResponseEntity<CreateConsultantResponse> submit( @RequestBody CreateConsultantRequest request) {
 
         Consultant consultantCreation = mapper.map(request.getValue(), Consultant.class);
-
-        System.out.println(consultantCreation.toString());
+        
+        
 
         String consultantId = consultantsService.CreateConsultant(consultantCreation);
 
         consultantCreation.setUuid(consultantId);
+        
 
 
+       
         return ResponseEntity.ok(new CreateConsultantResponse(consultantId));
     }
 
