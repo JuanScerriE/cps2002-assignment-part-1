@@ -1,12 +1,13 @@
 package com.cps2002.resourcemanagementservice.web.controllers;
 
 import com.cps2002.resourcemanagementservice.services.ConsultantsService;
-import com.cps2002.resourcemanagementservice.services.models.Booking;
 import com.cps2002.resourcemanagementservice.services.models.Consultant;
-import com.cps2002.resourcemanagementservice.web.controllers.requests.BookConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.CreateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.UpdateConsultantRequest;
-import com.cps2002.resourcemanagementservice.web.controllers.responses.*;
+import com.cps2002.resourcemanagementservice.web.controllers.responses.CreateConsultantResponse;
+import com.cps2002.resourcemanagementservice.web.controllers.responses.DeleteConsultantResponse;
+import com.cps2002.resourcemanagementservice.web.controllers.responses.GetConsultantResponse;
+import com.cps2002.resourcemanagementservice.web.controllers.responses.UpdateConsultantResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -84,6 +85,7 @@ public class ConsultantServiceController {
         if (isRemoved == null) {
             return ResponseEntity.notFound().build();
         }
+
         DeleteConsultantResponse deleteConsultantResponse = mapper.map(isRemoved, DeleteConsultantResponse.class);
         return ResponseEntity.ok(deleteConsultantResponse);
     }

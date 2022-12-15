@@ -6,11 +6,9 @@ import com.cps2002.resourcemanagementservice.data.repositories.BookingRepository
 import com.cps2002.resourcemanagementservice.data.repositories.ConsultantRepository;
 import com.cps2002.resourcemanagementservice.services.models.Booking;
 import com.cps2002.resourcemanagementservice.services.models.Consultant;
+import com.cps2002.resourcemanagementservice.services.subscribers.TimetablingConsultantSubscriber;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,13 +20,14 @@ import java.util.UUID;
 @Service
 public class ConsultantsService {
 
-
     @Autowired
-    ConsultantRepository consultantRepository;
+    private ConsultantRepository consultantRepository;
     @Autowired
-    BookingRepository bookingRepository;
+    private BookingRepository bookingRepository;
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
+    @Autowired
+    private TimetablingConsultantSubscriber subscriber;
 
     ModelMapper mapper = new ModelMapper();
 
@@ -108,17 +107,6 @@ public class ConsultantsService {
 
     }
 
-    // public List<Booking> getBookingsByConsultantId(String consultantId) {
-    //     List<Booking> bookings = new ArrayList<>();
-
-    //     String url = "http://TIMETABLING/get-all-by-consultant?consultantUuid=" + consultantId;
-    //     RestTemplate restTemplate = new RestTemplate();
-    //     ResponseEntity<List<Booking>> response = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Booking>>() {
-    //     });
-    //     bookings = response.getBody();
-    //     return bookings;
-    // }
-
     public String DeleteConsultant(String id) {
         //delete consultant
         consultantRepository.deleteById(id);
@@ -126,25 +114,12 @@ public class ConsultantsService {
         ConsultantEntity consultantEntity = consultantRepository.findById(id).orElse(null);
 
         if (consultantEntity == null) {
-            //create observer that removes consultant from all bookings
-            //get all bookings related to consultant and update their consultant id to null
-
-            //get all bookings related to consultant id with http request from timetabling service
-            //update all bookings related to consultant id with http request from timetabling service
-
-            String url = "http://TIMETABLING/internal/null-consultant/?consultantUuid=" + id;
-            //call url to delete consultant from all bookings
-
-            //call url to put consultant id to null in all bookings
-            HttpEntity<String> request = new HttpEntity<String>(id);
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, request, new ParameterizedTypeReference<String>() {
-            });
+            ResponseEntity<String> response = subscriber.notifyOfDelete(id);
 
             return response.getBody();
         } else {
             return null;
         }
-
     }
 
 

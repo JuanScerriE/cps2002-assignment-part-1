@@ -3,11 +3,11 @@ package com.cps2002.customermanagementservice.services;
 import com.cps2002.customermanagementservice.data.entities.CustomerEntity;
 import com.cps2002.customermanagementservice.data.repositories.CustomerRepository;
 import com.cps2002.customermanagementservice.services.models.Customer;
+import com.cps2002.customermanagementservice.services.subscribers.TimetablingCustomerSubscriber;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class CustomerManagementService {
     @Autowired
     private CustomerRepository customerRepo;
     @Autowired
-    private RestTemplate rest;
+    private TimetablingCustomerSubscriber subscriber;
 
     public Optional<String> createCustomer(Customer customer) {
         if (customer.getName() == null || customer.getName().isEmpty()) {
@@ -76,7 +76,9 @@ public class CustomerManagementService {
         try {
             customerRepo.deleteById(uuid);
 
-            rest.put("http://TIMETABLING/internal/null-customer?customerUuid=" + uuid, null);
+            if (!subscriber.notifyOfDelete(uuid)) {
+                System.out.println("notifying subscriber failed");
+            }
 
             deleted = true;
         } catch (Exception exception) {

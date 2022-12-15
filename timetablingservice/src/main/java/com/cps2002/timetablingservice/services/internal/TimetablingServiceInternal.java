@@ -56,6 +56,7 @@ public class TimetablingServiceInternal implements TimetablingService {
                 endTime < START_OF_WORK_HOURS ||
                 endTime > END_OF_WORK_HOURS
         ) {
+            System.out.println("outside of work hours");
             return false;
         }
 
@@ -65,15 +66,15 @@ public class TimetablingServiceInternal implements TimetablingService {
         } catch (HttpClientErrorException exception) {
             exception.printStackTrace();
 
+            System.out.println("consultant does not exist");
             return false;
         }
 
         // check for no conflicting consultant bookings
         if (!bookingRepo.canBook(booking.getConsultantUuid(), booking.getStart()).isEmpty()) {
+            System.out.println("conflicting booking");
             return false;
         }
-
-        // TODO: add same checks for customer
 
         return true;
     }
