@@ -4,8 +4,10 @@ import com.cps2002.customermanagementservice.data.entities.CustomerEntity;
 import com.cps2002.customermanagementservice.data.repositories.CustomerRepository;
 import com.cps2002.customermanagementservice.services.models.Customer;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,13 +16,12 @@ import java.util.UUID;
 
 @Service
 public class CustomerManagementService {
-    private final ModelMapper mapper;
-    private final CustomerRepository customerRepo;
-
-    public CustomerManagementService(ModelMapper mapper, CustomerRepository customerRepo) {
-        this.mapper = mapper;
-        this.customerRepo = customerRepo;
-    }
+    @Autowired
+    private ModelMapper mapper;
+    @Autowired
+    private CustomerRepository customerRepo;
+    @Autowired
+    private RestTemplate rest;
 
     public Optional<String> createCustomer(Customer customer) {
         if (customer.getName() == null || customer.getName().isEmpty()) {
@@ -74,6 +75,8 @@ public class CustomerManagementService {
 
         try {
             customerRepo.deleteById(uuid);
+
+            rest.put("http://TIMETABLING/internal/null-customer?customerUuid=" + uuid, null);
 
             deleted = true;
         } catch (Exception exception) {

@@ -9,13 +9,11 @@ import com.cps2002.resourcemanagementservice.services.models.Consultant;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-//import HTTPEntity;
-
-import org.springframework.http.HttpEntity;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -92,7 +90,7 @@ public class ConsultantsService {
         return consultant;
 
     }
-    
+
     //get Consultants by speciality
     public ArrayList<Consultant> GetConsultantsBySpeciality(String speciality) {
         //get all consultants
@@ -101,11 +99,11 @@ public class ConsultantsService {
 
         for (ConsultantEntity consultantEntity : consultantEntities) {
             Consultant consultant = mapper.map(consultantEntity, Consultant.class);
-            if(consultant.getSpeciality().contains(speciality)){
+            if (consultant.getSpeciality().contains(speciality)) {
                 consultants.add(consultant);
             }
         }
-       System.out.println(consultants);
+        System.out.println(consultants);
         return consultants;
 
     }
@@ -124,26 +122,23 @@ public class ConsultantsService {
     public String DeleteConsultant(String id) {
         //delete consultant
         consultantRepository.deleteById(id);
+
         ConsultantEntity consultantEntity = consultantRepository.findById(id).orElse(null);
 
         if (consultantEntity == null) {
-              
-           //create observer that removes consultant from all bookings
-           //get all bookings related to consultant and update their consultant id to null
+            //create observer that removes consultant from all bookings
+            //get all bookings related to consultant and update their consultant id to null
 
-           //get all bookings related to consultant id with http request from timetabling service
-              //update all bookings related to consultant id with http request from timetabling service
-              
-           
-                  String url = "http://TIMETABLING/internal/?consultantUuid=" + id;
-                  //call url to delete consultant from all bookings
-                 
-                  //call url to put consultant id to null in all bookings
-                   HttpEntity<String> request = new HttpEntity<String>(id);
-                    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT ,request, new ParameterizedTypeReference<String>() {
-                    });
-                  
-              
+            //get all bookings related to consultant id with http request from timetabling service
+            //update all bookings related to consultant id with http request from timetabling service
+
+            String url = "http://TIMETABLING/internal/null-consultant/?consultantUuid=" + id;
+            //call url to delete consultant from all bookings
+
+            //call url to put consultant id to null in all bookings
+            HttpEntity<String> request = new HttpEntity<String>(id);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, request, new ParameterizedTypeReference<String>() {
+            });
 
             return response.getBody();
         } else {
@@ -151,7 +146,6 @@ public class ConsultantsService {
         }
 
     }
-
 
 
     public String UpdateConsultant(String Id, Consultant consultant) {
@@ -167,7 +161,6 @@ public class ConsultantsService {
         return consultantEntity.getUuid();
 
     }
-
 
 
 }
