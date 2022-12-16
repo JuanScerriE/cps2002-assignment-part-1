@@ -5,7 +5,6 @@ import com.cps2002.resourcemanagementservice.services.models.Consultant;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.CreateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.UpdateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.responses.CreateConsultantResponse;
-import com.cps2002.resourcemanagementservice.web.controllers.responses.DeleteConsultantResponse;
 import com.cps2002.resourcemanagementservice.web.controllers.responses.GetConsultantResponse;
 import com.cps2002.resourcemanagementservice.web.controllers.responses.UpdateConsultantResponse;
 import org.modelmapper.ModelMapper;
@@ -36,16 +35,11 @@ public class ConsultantServiceController {
     public ResponseEntity<CreateConsultantResponse> submit( @RequestBody CreateConsultantRequest request) {
 
         Consultant consultantCreation = mapper.map(request.getValue(), Consultant.class);
-        
-        
 
         String consultantId = consultantsService.CreateConsultant(consultantCreation);
 
         consultantCreation.setUuid(consultantId);
-        
 
-
-       
         return ResponseEntity.ok(new CreateConsultantResponse(consultantId));
     }
 

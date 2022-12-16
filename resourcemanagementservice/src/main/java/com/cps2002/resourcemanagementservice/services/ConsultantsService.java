@@ -2,7 +2,6 @@ package com.cps2002.resourcemanagementservice.services;
 
 
 import com.cps2002.resourcemanagementservice.data.entities.ConsultantEntity;
-
 import com.cps2002.resourcemanagementservice.data.repositories.ConsultantRepository;
 import com.cps2002.resourcemanagementservice.services.models.Consultant;
 import com.cps2002.resourcemanagementservice.services.strategy.ExecutiveStrategy;
@@ -11,9 +10,7 @@ import com.cps2002.resourcemanagementservice.services.strategy.SeniorStrategy;
 import com.cps2002.resourcemanagementservice.services.subscribers.TimetablingConsultantSubscriber;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -33,20 +30,18 @@ public class ConsultantsService {
 
 
     public String CreateConsultant(Consultant consultant) {
-
         String type = consultant.getType();
 
-            if(Objects.equals(type, "Senior")){
-        double companyCut=consultant.Commision(new SeniorStrategy(0.15));
-             consultant.setCompanyRate(companyCut);
-            }else if(Objects.equals(type, "Junior")){
-                double companyCut=consultant.Commision(new JuniorStrategy(0.05));
-                consultant.setCompanyRate(companyCut);
-            }else if(Objects.equals(type, "Executive")){
-                double companyCut=consultant.Commision(new ExecutiveStrategy(0.10));
-                consultant.setCompanyRate(companyCut);
-            }
-
+        if (Objects.equals(type, "Senior")) {
+            double companyCut = consultant.Commision(new SeniorStrategy(0.15));
+            consultant.setCompanyCut(companyCut);
+        } else if (Objects.equals(type, "Junior")) {
+            double companyCut = consultant.Commision(new JuniorStrategy(0.05));
+            consultant.setCompanyCut(companyCut);
+        } else if (Objects.equals(type, "Executive")) {
+            double companyCut = consultant.Commision(new ExecutiveStrategy(0.10));
+            consultant.setCompanyCut(companyCut);
+        }
 
         ConsultantEntity consultantEntity = mapper.map(consultant, ConsultantEntity.class);
         consultantEntity.setUuid(UUID.randomUUID().toString());
@@ -54,11 +49,7 @@ public class ConsultantsService {
         consultantEntity = consultantRepository.save(consultantEntity);
 
         return consultantEntity.getUuid();
-
-
     }
-
-  
 
 
     public ArrayList<Consultant> GetConsultants() {
@@ -133,25 +124,22 @@ public class ConsultantsService {
     public String UpdateConsultant(String Id, Consultant consultant) {
         //update consultant
         String type = consultant.getType();
-        
-        if(Objects.equals(type, "Senior")){
-    double companyCut=consultant.Commision(new SeniorStrategy(0.15));
-         consultant.setCompanyRate(companyCut);
-        }else if(Objects.equals(type, "Junior")){
-            double companyCut=consultant.Commision(new JuniorStrategy(0.05));
-            consultant.setCompanyRate(companyCut);
-        }else if(Objects.equals(type, "Executive")){
-            double companyCut=consultant.Commision(new ExecutiveStrategy(0.10));
-            consultant.setCompanyRate(companyCut);
+
+        if (Objects.equals(type, "Senior")) {
+            double companyCut = consultant.Commision(new SeniorStrategy(0.15));
+            consultant.setCompanyCut(companyCut);
+        } else if (Objects.equals(type, "Junior")) {
+            double companyCut = consultant.Commision(new JuniorStrategy(0.05));
+            consultant.setCompanyCut(companyCut);
+        } else if (Objects.equals(type, "Executive")) {
+            double companyCut = consultant.Commision(new ExecutiveStrategy(0.10));
+            consultant.setCompanyCut(companyCut);
         }
 
         ConsultantEntity consultantEntity = mapper.map(consultant, ConsultantEntity.class);
         consultantEntity.setUuid(Id);
 
-
-        System.out.println(consultantEntity.toString());
         consultantRepository.save(consultantEntity);
-        System.out.println("updated");
 
         return consultantEntity.getUuid();
 

@@ -8,10 +8,7 @@ public class Consultant {
     private String type;
     private String speciality;
     private int rate;
-    private double companyRate;
-
-
-    
+    private double companyCut;
 
     public String getUuid() {
         return uuid;
@@ -53,15 +50,15 @@ public class Consultant {
         this.rate = rate;
     }
 
-    public double getCompanyRate() {
-        return companyRate;
+    public double getCompanyCut() {
+        return companyCut;
     }
 
-    public void setCompanyRate(double companyRate) {
-        this.companyRate = companyRate;
+    public void setCompanyCut(double companyCut) {
+        this.companyCut = companyCut;
     }
 
-    public double Commision(CommisionStrategy commisionStrategy){
+    public double Commision(CommisionStrategy commisionStrategy) {
         return commisionStrategy.commision(rate);
     }
 
@@ -75,7 +72,7 @@ public class Consultant {
                 "Speciality" + speciality + "\n" +
                 "Rate" + rate + "\n" +
                 "Id" + uuid + "\n" +
-                "Company Rate" + companyRate + "\n" +
+                "Company Cut" + companyCut + "\n" +
                 '}';
     }
 
