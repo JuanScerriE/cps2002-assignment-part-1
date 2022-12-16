@@ -33,9 +33,9 @@ public class ConsultantControllerTests extends Tests {
 
         Consultant consultant = new Consultant();
         consultant.setName("John");
-        consultant.setType("Consultant");
+        consultant.setType("Senior");
         consultant.setSpeciality("Maths");
-        consultant.setRate(10);
+        consultant.setRate(100);
 
         request.setValue(consultant);
 
@@ -44,6 +44,8 @@ public class ConsultantControllerTests extends Tests {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             )
             .andExpect(status().isOk());
+
+                
 
     }
 

@@ -22,7 +22,10 @@ import axios from "axios";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import {Fab, TextField} from "@mui/material";
+//dropdown from material ui\
+
+
+import { Fab, TextField, MenuItem, Select,FormControl,InputLabel } from "@mui/material";
 import MDSnackbar from "../../components/MDSnackbar";
 // Data
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
@@ -61,184 +64,199 @@ function Dashboard() {
     setRate(event.target.value);
   };
 
-  const handleCreateUser = async() => {
-     const user={
-       name: userName,
-       specialityPreference: preference,
-     }
+  const handleCreateUser = async () => {
+    const user = {
+      name: userName,
+      specialityPreference: preference,
+    }
 
-      console.log(JSON.stringify(user));
+    console.log(JSON.stringify(user));
 
-      fetch("http://localhost:9000/customer-management-service/create", {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
+    fetch("http://localhost:9000/customer-management-service/create", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
 
-          },
-          body: JSON.stringify(user),
+      },
+      body: JSON.stringify(user),
 
-      })
-          .then(res => res.json())
-          .then(body => {
-              console.log(body);
+    })
+      .then(res => res.json())
+      .then(body => {
+        console.log(body);
 
-              setSnackbar({
-                  open: true,
-                  message: `User ${body["uuid"]} Creation Successfully`,
-                  color: "success",
-              });
-          }
-          )
-          .catch(err => {
-              setSnackbar({
-                  open: true,
-                  message: `User ${err} Creation Failed`,
-                  color: "error",
-              });
-          }
-          );
+        setSnackbar({
+          open: true,
+          message: `User ${body["uuid"]} Creation Successfully`,
+          color: "success",
+        });
+      }
+      )
+      .catch(err => {
+        setSnackbar({
+          open: true,
+          message: `User ${err} Creation Failed`,
+          color: "error",
+        });
+      }
+      );
 
 
   };
 
 
   const handleCreateConsultant = async () => {
-      const consultant = {
-          value: {
-              uuid: null,
-              name: consultantName,
-              type: type,
-              speciality: speciality,
-              rate: rate
-          }
+    const consultant = {
+      value: {
+        uuid: null,
+        name: consultantName,
+        type: type,
+        speciality: speciality,
+        rate: rate
       }
+    }
 
-      console.log(JSON.stringify(consultant));
+    console.log(JSON.stringify(consultant));
 
-      fetch("http://localhost:9000/resource-management-service/new_consultant", {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
+    fetch("http://localhost:9000/resource-management-service/new_consultant", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
 
-          },
-          body: JSON.stringify(consultant),
-          
+      },
+      body: JSON.stringify(consultant),
+
+    })
+      .then(res => res.json())
+      .then(body => {
+        console.log(body);
+
+        setSnackbar({
+          open: true,
+          message: `Consultant ${body["consultantId"]} Creation Successfully`,
+          color: "success",
+        });
       })
-          .then(res => res.json())
-          .then(body => {
-              console.log(body);
-
-              setSnackbar({
-                  open: true,
-                  message: `Consultant ${body["consultantId"]} Creation Successfully`,
-                  color: "success",
-              });
-          })
-          .catch(err => {
-              setSnackbar({
-                  open: true,
-                  message: `Consultant ${err} Creation Failed`,
-                  color: "error",
-              });
-          });
+      .catch(err => {
+        setSnackbar({
+          open: true,
+          message: `Consultant ${err} Creation Failed`,
+          color: "error",
+        });
+      });
   };
 
-  
+
 
 
 
   return (
     <DashboardLayout>
       <MDSnackbar
-          open={snackbar.open}
-          title={snackbar.message}
-          color={snackbar.color}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
+        open={snackbar.open}
+        title={snackbar.message}
+        color={snackbar.color}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
       />
       <DashboardNavbar />
       <MDBox py={3}>
-         CREATE USER
-        <Grid container spacing={3} direction={'column'}  sx={{marginBottom:'5%'}}>
+        CREATE USER
+        <Grid container spacing={3} direction={'column'} sx={{ marginBottom: '5%' }}>
           <Grid item xs={12} md={6}>
-                   
-            <TextField   label=" Name" variant="outlined" fullWidth value={userName} onChange={(e)=>handleUserNameChange(e)}/>
+
+            <TextField label=" Name" variant="outlined" fullWidth value={userName} onChange={(e) => handleUserNameChange(e)} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField   label="Preference" variant="outlined" fullWidth value={preference} onChange={(e)=>handlePreferenceChange(e)}/>
+            <TextField label="Preference" variant="outlined" fullWidth value={preference} onChange={(e) => handlePreferenceChange(e)} />
           </Grid>
           <Fab
-          onClick={handleCreateUser}
-          variant="extended"
-          sx={
-            {
-                  color: "#fff",
-                  width: 300,
-                  height: 35,
-                  borderRadius: 2,
-                  alignSelf: "center",
-                  marginTop: "5%",
-                  fontSize: "1rem",
-                  backgroundColor: "#000",
-                  transition:'all 0.3s ease-in-out',
-                  ": hover": {
-                    backgroundColor: "#FFF",
-                    color: "#000",
-                    border: "1px solid black",
-                    transform:'scale(1.05)'
-                  },
-                }
-             
-          }
-         
+            onClick={handleCreateUser}
+            variant="extended"
+            sx={
+              {
+                color: "#fff",
+                width: 300,
+                height: 35,
+                borderRadius: 2,
+                alignSelf: "center",
+                marginTop: "5%",
+                fontSize: "1rem",
+                backgroundColor: "#000",
+                transition: 'all 0.3s ease-in-out',
+                ": hover": {
+                  backgroundColor: "#FFF",
+                  color: "#000",
+                  border: "1px solid black",
+                  transform: 'scale(1.05)'
+                },
+              }
+
+            }
+
+          >
+            Submit
+          </Fab>
+        </Grid>
+        CREATE CONSULTANT
+        <Grid container spacing={3} direction={'column'} sx={{ marginBottom: '5%' }}>
+
+          <Grid item xs={12} md={6}>
+
+            <TextField label=" Name" variant="outlined" fullWidth value={consultantName} onChange={(e) => handleConsultantNameChange(e)} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+          <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Type</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={type}
+          label="Type"
+          onChange={(e) => handleTypeChange(e)}
+          style={{ height: 45 }}
         >
-          Submit
-        </Fab>
-       </Grid>
-       CREATE CONSULTANT
-       <Grid container spacing={3} direction={'column'} sx={{marginBottom:'5%'}}> 
-          
-          <Grid item xs={12} md={6}>
-                   
-            <TextField   label=" Name" variant="outlined" fullWidth value={consultantName} onChange={(e)=>handleConsultantNameChange(e)} />
+          <MenuItem value={'Senior'}>Senior</MenuItem>
+          <MenuItem value={'Executive'}>Executive</MenuItem>
+          <MenuItem value={'Junior'}>Junior</MenuItem>
+        </Select>
+      </FormControl>
+
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField   label="Type" variant="outlined" fullWidth value={type} onChange={(e)=>handleTypeChange(e)} />
+            <TextField label="Speciality" variant="outlined" fullWidth value={speciality} onChange={(e) => handleSpecialityChange(e)} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <TextField   label="Speciality" variant="outlined" fullWidth value={speciality} onChange={(e)=>handleSpecialityChange(e)} />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <TextField   label="Rate" variant="outlined" fullWidth type={'number'}  value={rate} onChange={(e)=>handleRateChange(e)}/>
+            <TextField label="Rate" variant="outlined" fullWidth type={'number'} value={rate} onChange={(e) => handleRateChange(e)} />
           </Grid>
           <Fab
-              onClick={handleCreateConsultant}
-              variant="extended"
-              sx={
-         {
-               color: "#fff",
-               width: 300,
-               height: 35,
-               borderRadius: 2,
-               alignSelf: "center",
-               marginTop: "5%",
-               fontSize: "1rem",
-               backgroundColor: "#000",
-               transition:'all 0.3s ease-in-out',
-               ": hover": {
-                 backgroundColor: "#FFF",
-                 color: "#000",
-                 border: "1px solid black",
-                 transform:'scale(1.05)'
-               },
-             }
-          
-       }
-      
-     >
-       Submit
-     </Fab>
-       </Grid>
-       {/* DELETE USER
+            onClick={handleCreateConsultant}
+            variant="extended"
+            sx={
+              {
+                color: "#fff",
+                width: 300,
+                height: 35,
+                borderRadius: 2,
+                alignSelf: "center",
+                marginTop: "5%",
+                fontSize: "1rem",
+                backgroundColor: "#000",
+                transition: 'all 0.3s ease-in-out',
+                ": hover": {
+                  backgroundColor: "#FFF",
+                  color: "#000",
+                  border: "1px solid black",
+                  transform: 'scale(1.05)'
+                },
+              }
+
+            }
+
+          >
+            Submit
+          </Fab>
+        </Grid>
+        {/* DELETE USER
         <Grid container spacing={3} direction={'column'}  sx={{marginBottom:'5%'}}>
           <Grid item xs={12} md={6}>
                    
@@ -274,7 +292,7 @@ function Dashboard() {
         </Fab>
        </Grid> */}
       </MDBox>
-     
+
     </DashboardLayout>
   );
 }
