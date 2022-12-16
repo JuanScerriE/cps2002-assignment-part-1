@@ -11,34 +11,23 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // @mui material components
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
 import * as React from "react";
+import {useEffect, useState} from "react";
 import dayjs from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import DataTable from "examples/Tables/DataTable";
-import { DataGrid } from '@mui/x-data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import MDSnackbar from "../../components/MDSnackbar";
 // Data
-import authorsTableData from "layouts/tables/data/authorsTableData";
-import bookingsTableData from "layouts/tables/data/bookingsTableData";
-import consultantsTableData from "layouts/tables/data/consultantsTableData";
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { useState, useEffect } from "react";
-import { Table,TableBody,TableCell,TableContainer,TableHead,Paper,TableRow,TextField} from "@mui/material";
-import { CommentsDisabledOutlined } from "@mui/icons-material";
+import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
+import {TextField} from "@mui/material";
 
 
 function Tables() {
@@ -62,6 +51,7 @@ function Tables() {
   const [update_type, setUpdateType] = useState('');
   const [update_speciality, setUpdateSpeciality] = useState('');
   const [update_rate, setUpdateRate] = useState(0);
+    const [update_company_cut, setUpdateCompanyCut] = useState(0);
 
   const [update_booking_date, setUpdateBookingDate] = useState('');
   const [update_booking_time, setUpdateBookingTime] = useState('');
@@ -120,7 +110,6 @@ function Tables() {
     let result = await promise.json();
     console.log(result);
     FetchConsultants();
-   
   }
   
   //users-service
@@ -246,11 +235,12 @@ function Tables() {
   }, [selectedConsultant, selectedUser,selectedBooking]);
 
   const columns = [
-    { field: 'uuid', headerName: 'ID', width: 350 },
-    { field: 'name', headerName: 'Name', width: 100 },
-    { field: 'type', headerName: 'Type', width: 100 },
-    { field: 'speciality', headerName: 'Speciality', width: 250 },
-    { field: 'rate', headerName: 'Rate', width: 100 },
+      {field: 'uuid', headerName: 'ID', width: 350},
+      {field: 'name', headerName: 'Name', width: 100},
+      {field: 'type', headerName: 'Type', width: 100},
+      {field: 'speciality', headerName: 'Speciality', width: 250},
+      {field: 'rate', headerName: 'Rate', width: 70},
+      {field: 'companyCut', headerName: 'Company Cut', width: 130},
   ]
   const user_columns = [
     { field: 'uuid', headerName: 'ID', width: 350 },
@@ -319,7 +309,8 @@ function Tables() {
           setUpdateName(selectedRowData[0].name);
           setUpdateType(selectedRowData[0].type);
           setUpdateSpeciality(selectedRowData[0].speciality);
-          setUpdateRate(selectedRowData[0].rate);
+              setUpdateRate(selectedRowData[0].rate);
+              setUpdateCompanyCut(selectedRowData[0].companyCut);
           }
 
         }}
