@@ -29,11 +29,11 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 public class TimetablingServiceTests extends Tests {
     @Mock
     private RestTemplate rest;
@@ -182,7 +182,7 @@ public class TimetablingServiceTests extends Tests {
     public void testCanBookInvalidConsultant() {
         String consultantUuid = UUID.randomUUID().toString();
 
-        Mockito.when(rest.getForObject("http://RESOURCEMANAGEMENT/consultant/" + consultantUuid, Consultant.class))
+        when(rest.getForObject("http://RESOURCEMANAGEMENT/consultant/" + consultantUuid, Consultant.class))
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         Booking booking = Booking.builder()
@@ -199,6 +199,7 @@ public class TimetablingServiceTests extends Tests {
         boolean canBook = timetablingService.canBook(booking);
 
         assertFalse(canBook);
+        verify(rest, times(1)).getForObject("http://RESOURCEMANAGEMENT/consultant/" + consultantUuid, Consultant.class);
     }
 
     @Test

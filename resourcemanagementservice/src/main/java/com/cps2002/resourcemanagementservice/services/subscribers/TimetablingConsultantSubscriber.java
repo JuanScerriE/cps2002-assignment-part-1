@@ -10,24 +10,20 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class TimetablingConsultantSubscriber implements Subscriber<ResponseEntity<String>> {
+public class TimetablingConsultantSubscriber implements Subscriber<Boolean> {
     @Autowired
-    public RestTemplate rest;
+    private RestTemplate rest;
 
     @Override
-    public ResponseEntity<String> notifyOfDelete(String uuid) {
+    public Boolean notifyOfDelete(String uuid) {
         try {
-            String url = "http://TIMETABLING/internal/null-consultant/?consultantUuid=" + uuid;
-
-            HttpEntity<String> request = new HttpEntity<String>(uuid);
-            ResponseEntity<String> response = rest.exchange(url, HttpMethod.PUT, request, new ParameterizedTypeReference<String>() {
-            });
-
-            return response;
+            rest.put("http://TIMETABLING/internal/null-consultant/?consultantUuid=" + uuid, null);
         } catch (HttpClientErrorException exception) {
             exception.printStackTrace();
 
-            return null;
+            return false;
         }
+
+        return true;
     }
 }

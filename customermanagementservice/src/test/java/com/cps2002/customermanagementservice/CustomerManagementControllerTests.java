@@ -9,7 +9,9 @@ import com.cps2002.customermanagementservice.web.controllers.responses.CreateCus
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.LinkedList;
@@ -28,6 +30,9 @@ public class CustomerManagementControllerTests extends ControllerTests {
 
     @Autowired
     private CustomerRepository customerRepo;
+
+    @MockBean
+    private RestTemplate rest;
 
     public CustomerManagementControllerTests(WebApplicationContext webApplicationContext) {
         super(webApplicationContext);

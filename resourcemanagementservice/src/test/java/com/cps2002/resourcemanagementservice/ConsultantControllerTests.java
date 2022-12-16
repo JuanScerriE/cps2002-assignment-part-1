@@ -1,17 +1,15 @@
 package com.cps2002.resourcemanagementservice;
 
 import com.cps2002.resourcemanagementservice.services.ConsultantsService;
-import com.cps2002.resourcemanagementservice.services.models.Booking;
 import com.cps2002.resourcemanagementservice.services.models.Consultant;
-import com.cps2002.resourcemanagementservice.web.controllers.requests.BookConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.CreateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.UpdateConsultantRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,12 +24,12 @@ public class ConsultantControllerTests extends Tests {
     @Autowired
     ConsultantsService consultantsService;
 
+    @MockBean
+    private RestTemplate rest;
 
     @Test
     public void testCreateConsultant() throws Exception {
         CreateConsultantRequest request = new CreateConsultantRequest();
-
-//        ConsultantsService create = new ConsultantsService();
 
         Consultant consultant = new Consultant();
         consultant.setName("John");
@@ -39,27 +37,18 @@ public class ConsultantControllerTests extends Tests {
         consultant.setSpeciality("Maths");
         consultant.setRate(10);
 
-
         request.setValue(consultant);
 
-//        Consultant got = create.GetConsultant("2ac0cb64");
-//        System.out.println(asJsonString(request));
-
         mockMvc.perform(post("/new_consultant")
-                        .content(asJsonString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                )
-                .andExpect(status().isOk());
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+            )
+            .andExpect(status().isOk());
 
     }
 
-
-
-
     @Test
     public void testGetConsultant() throws Exception {
-
-
         Consultant consultant = new Consultant();
         //set values of consultant for testing
         consultant.setName("John");
@@ -72,31 +61,30 @@ public class ConsultantControllerTests extends Tests {
 
 
         mockMvc.perform(get("/consultant/{consultantId}", consultantId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(consultant.getName()))
-                .andExpect(jsonPath("$.type").value(consultant.getType()))
-                .andExpect(jsonPath("$.speciality").value(consultant.getSpeciality()))
-                .andExpect(jsonPath("$.rate").value(consultant.getRate()))
-                .andExpect(jsonPath("$.uuid").value(consultant.getUuid()))
-                .andReturn();
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value(consultant.getName()))
+            .andExpect(jsonPath("$.type").value(consultant.getType()))
+            .andExpect(jsonPath("$.speciality").value(consultant.getSpeciality()))
+            .andExpect(jsonPath("$.rate").value(consultant.getRate()))
+            .andExpect(jsonPath("$.uuid").value(consultant.getUuid()))
+            .andReturn();
 
     }
 
     //test for get all consultants
     @Test
     public void testGetAllConsultants() throws Exception {
-
         //pass customer id and put query function before booking to find consultant id, or
         //give option for them to pass consultant id themselves || name.
-         Consultant consultant = new Consultant();
+        Consultant consultant = new Consultant();
 
-         consultant.setName("John");
-         consultant.setType("Consultant");
-         consultant.setSpeciality("Maths");
-         consultant.setRate(10);
+        consultant.setName("John");
+        consultant.setType("Consultant");
+        consultant.setSpeciality("Maths");
+        consultant.setRate(10);
 
-         String consultantId = consultantsService.CreateConsultant(consultant);
-         consultant.setUuid(consultantId);
+        String consultantId = consultantsService.CreateConsultant(consultant);
+        consultant.setUuid(consultantId);
 
 
         Consultant consultantX = new Consultant();
@@ -111,36 +99,27 @@ public class ConsultantControllerTests extends Tests {
 
 
         mockMvc.perform(get("/consultants"))
-                .andExpect(status().isOk())
-                .andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
 
     }
 
-
-    //test delete consultant
-
     @Test
     public void testDeleteConsultant() throws Exception {
-
-        //pass customer id and put query function before booking to find consultant id, or
-        //give option for them to pass consultant id themselves || name.
         Consultant consultant = new Consultant();
-        //set values of consultant for testing
+
         consultant.setName("John");
         consultant.setType("Consultant");
         consultant.setSpeciality("Maths");
         consultant.setRate(10);
 
         String consultantId = consultantsService.CreateConsultant(consultant);
+
         consultant.setUuid(consultantId);
 
         mockMvc.perform(delete("/delete/{consultantId}", consultantId))
-                .andExpect(status().isOk());
-
-
+            .andExpect(status().isOk());
     }
-
-    //test for update consultant
 
     @Test
     public void testUpdateConsultant() throws Exception {
@@ -168,28 +147,19 @@ public class ConsultantControllerTests extends Tests {
 
 
         mockMvc.perform(post("/update_consultant")
-                        .content(asJsonString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .content(asJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk());
 
 
     }
 
-
-
-
-
-    //test delete booking
-
-
-    //test get consultants by speciality 
     @Test
     public void testGetConsultantsBySpeciality() throws Exception {
-
         //pass customer id and put query function before booking to find consultant id, or
         //give option for them to pass consultant id themselves || name.
         Consultant consultant = new Consultant();
-       
+
         consultant.setName("John");
         consultant.setType("Consultant");
         consultant.setSpeciality("Maths");
@@ -199,7 +169,7 @@ public class ConsultantControllerTests extends Tests {
         consultant.setUuid(consultantId);
 
         Consultant consultant2 = new Consultant();
-       
+
         consultant2.setName("John2");
         consultant2.setType("Consultant");
         consultant2.setSpeciality("Maths");
@@ -208,12 +178,8 @@ public class ConsultantControllerTests extends Tests {
         String consultantId2 = consultantsService.CreateConsultant(consultant2);
         consultant2.setUuid(consultantId2);
 
-
-
-        mockMvc.perform(get("/getallconsultants/{speciality}","Mat"))
-                .andExpect(status().isOk())
-                .andReturn();
-
+        mockMvc.perform(get("/getallconsultants/{speciality}", "Mat"))
+            .andExpect(status().isOk())
+            .andReturn();
     }
-
 }

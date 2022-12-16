@@ -76,8 +76,8 @@ function Tables() {
   
 
 
-  const [value, setValue] = React.useState(dayjs('2014-08-18T21:11:54'));
-  const [hours,setHours]=useState(0);
+  const [value, setValue] = React.useState(dayjs(new Date().toString()));
+  const [hours, setHours] = useState(0);
 
   const handleChange = (newValue) => {
     setValue(newValue);
@@ -103,9 +103,11 @@ function Tables() {
    const handleDeleteConsultant = async () => {
     console.log(selectedConsultant);
     let promise = await fetch(`http://localhost:9000/resource-management-service/delete/${selectedConsultant.uuid}`, {  method: "DELETE"});
-    let result = await promise.json();
-    console.log(result);
-    FetchConsultants();
+    if (promise.ok) {
+        await FetchConsultants();
+    } else {
+        console.log("Error occurred when deleting consultant");
+    }
   }
 
   const handleUpdateConsultant = async () => {
@@ -199,14 +201,12 @@ function Tables() {
  
 
   const handleBookConsultant = async () => {
-   const startDate = value.toISOString();
-   //end date is start date + hours
+    const startDate = value.toISOString();
+    //end date is start date + hours
     const endDate = value.add(hours, 'hours').toISOString();
-   
     //remove .000Z from end date and start date
-     const start = startDate.substring(0, startDate.length - 5);
+    const start = startDate.substring(0, startDate.length - 5);
     const end = endDate.substring(0, endDate.length - 5);
-
 
     const booking ={
       consultantUuid: selectedConsultant.uuid,

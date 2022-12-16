@@ -107,19 +107,22 @@ public class ConsultantsService {
 
     }
 
-    public String DeleteConsultant(String id) {
-        //delete consultant
-        consultantRepository.deleteById(id);
+    public boolean DeleteConsultant(String uuid) {
+        boolean deleted = false;
 
-        ConsultantEntity consultantEntity = consultantRepository.findById(id).orElse(null);
+        try {
+            consultantRepository.deleteById(uuid);
 
-        if (consultantEntity == null) {
-            ResponseEntity<String> response = subscriber.notifyOfDelete(id);
+            if (!subscriber.notifyOfDelete(uuid)) {
+                System.out.println("notifying subscriber failed");
+            }
 
-            return response.getBody();
-        } else {
-            return null;
+            deleted = true;
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
+
+        return deleted;
     }
 
 

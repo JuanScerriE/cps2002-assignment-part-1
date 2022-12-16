@@ -78,16 +78,14 @@ public class ConsultantServiceController {
     }
 
     @DeleteMapping(value = "/delete/{consultantId}")
-    public ResponseEntity<DeleteConsultantResponse> deletePost(@PathVariable String consultantId) {
-        String isRemoved;
-        isRemoved = consultantsService.DeleteConsultant(consultantId);
+    public ResponseEntity<?> deletePost(@PathVariable String consultantId) {
+        boolean deleted = consultantsService.DeleteConsultant(consultantId);
 
-        if (isRemoved == null) {
-            return ResponseEntity.notFound().build();
+        if (!deleted) {
+            ResponseEntity.badRequest().build();
         }
 
-        DeleteConsultantResponse deleteConsultantResponse = mapper.map(isRemoved, DeleteConsultantResponse.class);
-        return ResponseEntity.ok(deleteConsultantResponse);
+        return ResponseEntity.ok().build();
     }
 
 
