@@ -11,34 +11,23 @@ Coded by www.creative-tim.com
  =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
 // @mui material components
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
 import * as React from "react";
+import {useEffect, useState} from "react";
 import dayjs from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import DataTable from "examples/Tables/DataTable";
-import { DataGrid } from '@mui/x-data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import MDSnackbar from "../../components/MDSnackbar";
 // Data
-import authorsTableData from "layouts/tables/data/authorsTableData";
-import bookingsTableData from "layouts/tables/data/bookingsTableData";
-import consultantsTableData from "layouts/tables/data/consultantsTableData";
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { useState, useEffect } from "react";
-import { Table,TableBody,TableCell,TableContainer,TableHead,Paper,TableRow,TextField} from "@mui/material";
-import { CommentsDisabledOutlined } from "@mui/icons-material";
+import {DateTimePicker} from '@mui/x-date-pickers/DateTimePicker';
+import {TextField} from "@mui/material";
 
 
 function Tables() {
@@ -62,6 +51,7 @@ function Tables() {
   const [update_type, setUpdateType] = useState('');
   const [update_speciality, setUpdateSpeciality] = useState('');
   const [update_rate, setUpdateRate] = useState(0);
+    const [update_company_cut, setUpdateCompanyCut] = useState(0);
 
   const [update_booking_date, setUpdateBookingDate] = useState('');
   const [update_booking_time, setUpdateBookingTime] = useState('');
@@ -77,8 +67,8 @@ function Tables() {
   
 
 
-  const [value, setValue] = React.useState(dayjs('2014-08-18T21:11:54'));
-  const [hours,setHours]=useState(0);
+  const [value, setValue] = React.useState(dayjs(new Date().toString()));
+  const [hours, setHours] = useState(0);
 
   const handleChange = (newValue) => {
     setValue(newValue);
@@ -103,13 +93,14 @@ function Tables() {
 
    const handleDeleteConsultant = async () => {
     console.log(selectedConsultant);
-     fetch(`http://localhost:9000/resource-management-service/delete/${selectedConsultant.uuid}`, {  method: "DELETE"}).then(()=>{
- 
-     FetchConsultants();
-     }).catch((err)=>{
-        console.log(err);
-      });
-   
+
+    let promise = await fetch(`http://localhost:9000/resource-management-service/delete/${selectedConsultant.uuid}`, {  method: "DELETE"});
+    if (promise.ok) {
+        await FetchConsultants();
+    } else {
+        console.log("Error occurred when deleting consultant");
+    }
+
   }
 
   const handleUpdateConsultant = async () => {
@@ -121,7 +112,6 @@ function Tables() {
     let result = await promise.json();
     console.log(result);
     FetchConsultants();
-   
   }
   
   //users-service
@@ -209,14 +199,12 @@ function Tables() {
  
 
   const handleBookConsultant = async () => {
-   const startDate = value.toISOString();
-   //end date is start date + hours
+    const startDate = value.toISOString();
+    //end date is start date + hours
     const endDate = value.add(hours, 'hours').toISOString();
-   
     //remove .000Z from end date and start date
-     const start = startDate.substring(0, startDate.length - 5);
+    const start = startDate.substring(0, startDate.length - 5);
     const end = endDate.substring(0, endDate.length - 5);
-
 
     const booking ={
       consultantUuid: selectedConsultant.uuid,
@@ -249,12 +237,14 @@ function Tables() {
   }, [selectedConsultant, selectedUser,selectedBooking]);
 
   const columns = [
-    { field: 'uuid', headerName: 'ID', width: 350 },
-    { field: 'name', headerName: 'Name', width: 100 },
-    { field: 'type', headerName: 'Type', width: 100 },
-    { field: 'speciality', headerName: 'Speciality', width: 250 },
-    { field: 'rate', headerName: 'Rate', width: 100 },
-    { field: 'companyRate', headerName: 'Company Earnings', width: 200 },
+
+      {field: 'uuid', headerName: 'ID', width: 350},
+      {field: 'name', headerName: 'Name', width: 100},
+      {field: 'type', headerName: 'Type', width: 100},
+      {field: 'speciality', headerName: 'Speciality', width: 250},
+      {field: 'rate', headerName: 'Rate', width: 70},
+      {field: 'companyCut', headerName: 'Company Cut', width: 130},
+
   ]
   const user_columns = [
     { field: 'uuid', headerName: 'ID', width: 350 },
@@ -323,7 +313,8 @@ function Tables() {
           setUpdateName(selectedRowData[0].name);
           setUpdateType(selectedRowData[0].type);
           setUpdateSpeciality(selectedRowData[0].speciality);
-          setUpdateRate(selectedRowData[0].rate);
+              setUpdateRate(selectedRowData[0].rate);
+              setUpdateCompanyCut(selectedRowData[0].companyCut);
           }
 
         }}

@@ -1,15 +1,24 @@
 package com.cps2002.timetablingservice;
 
+import com.cps2002.timetablingservice.data.repositories.BookingRepository;
 import com.cps2002.timetablingservice.services.internal.TimetablingServiceInternal;
 import com.cps2002.timetablingservice.services.internal.models.Booking;
+import com.cps2002.timetablingservice.services.internal.models.Consultant;
+import com.cps2002.timetablingservice.web.controllers.requests.CreateBookingRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
@@ -20,7 +29,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +44,12 @@ public class TimetablingControllerTests extends Tests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private ModelMapper mapper;
+
+    @MockBean
+    private RestTemplate rest;
 
     private MockMvc mockMvc;
 
@@ -51,9 +68,56 @@ public class TimetablingControllerTests extends Tests {
     }
 
     @Test
+    public void testCreateBooking() throws Exception {
+        Booking booking = Booking.builder()
+            .consultantUuid(UUID.randomUUID().toString())
+            .customerUuid(UUID.randomUUID().toString())
+            .start(LocalDateTime.now().plusDays(2)
+                .withHour(10)
+                .truncatedTo(ChronoUnit.SECONDS))
+            .end(LocalDateTime.now().plusDays(2)
+                .withHour(11)
+                .truncatedTo(ChronoUnit.SECONDS))
+            .build();
+
+        CreateBookingRequest request = mapper.map(booking, CreateBookingRequest.class);
+
+        mockMvc.perform(post("/create")
+                .content(toJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.uuid").exists());
+    }
+
+    @Test
+    public void testCreateBookingInvalidBooking() throws Exception {
+        Booking booking = Booking.builder()
+            .consultantUuid(UUID.randomUUID().toString())
+            .customerUuid(UUID.randomUUID().toString())
+            .start(LocalDateTime.now().plusDays(2)
+                .withHour(10)
+                .truncatedTo(ChronoUnit.SECONDS))
+            .end(LocalDateTime.now().plusDays(2)
+                .withHour(10)
+                .plusMinutes(30)
+                .truncatedTo(ChronoUnit.SECONDS))
+            .build();
+
+        CreateBookingRequest request = mapper.map(booking, CreateBookingRequest.class);
+
+        mockMvc.perform(post("/create")
+                .content(toJsonString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
     public void testGetBooking() throws Exception {
         Booking booking = Booking.builder()
-                .consultantUuid(UUID.randomUUID().toString())
+            .consultantUuid(UUID.randomUUID().toString())
                 .customerUuid(UUID.randomUUID().toString())
                 .start(LocalDateTime.now().plusDays(1)
                         .truncatedTo(ChronoUnit.SECONDS))

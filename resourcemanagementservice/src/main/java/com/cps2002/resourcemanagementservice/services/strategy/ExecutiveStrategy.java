@@ -2,12 +2,7 @@ package com.cps2002.resourcemanagementservice.services.strategy;
 
 
 public class ExecutiveStrategy implements CommisionStrategy{
-    private double commision;
-
-    public ExecutiveStrategy(double commision) {
-        this.commision = commision;
-    }
-
+    private double commision = 0.10;
 
     @Override
     public double commision(int rate) {

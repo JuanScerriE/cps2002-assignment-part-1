@@ -5,7 +5,6 @@ import com.cps2002.resourcemanagementservice.services.models.Consultant;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.CreateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.requests.UpdateConsultantRequest;
 import com.cps2002.resourcemanagementservice.web.controllers.responses.CreateConsultantResponse;
-import com.cps2002.resourcemanagementservice.web.controllers.responses.DeleteConsultantResponse;
 import com.cps2002.resourcemanagementservice.web.controllers.responses.GetConsultantResponse;
 import com.cps2002.resourcemanagementservice.web.controllers.responses.UpdateConsultantResponse;
 import org.modelmapper.ModelMapper;
@@ -36,16 +35,11 @@ public class ConsultantServiceController {
     public ResponseEntity<CreateConsultantResponse> submit( @RequestBody CreateConsultantRequest request) {
 
         Consultant consultantCreation = mapper.map(request.getValue(), Consultant.class);
-        
-        
 
         String consultantId = consultantsService.CreateConsultant(consultantCreation);
 
         consultantCreation.setUuid(consultantId);
-        
 
-
-       
         return ResponseEntity.ok(new CreateConsultantResponse(consultantId));
     }
 
@@ -80,16 +74,14 @@ public class ConsultantServiceController {
     }
 
     @DeleteMapping(value = "/delete/{consultantId}")
-    public ResponseEntity<DeleteConsultantResponse> deletePost(@PathVariable String consultantId) {
-        String isRemoved;
-        isRemoved = consultantsService.DeleteConsultant(consultantId);
+    public ResponseEntity<?> deletePost(@PathVariable String consultantId) {
+        boolean deleted = consultantsService.DeleteConsultant(consultantId);
 
-        if (isRemoved == null) {
-            return ResponseEntity.notFound().build();
+        if (!deleted) {
+            ResponseEntity.badRequest().build();
         }
 
-        DeleteConsultantResponse deleteConsultantResponse = mapper.map(isRemoved, DeleteConsultantResponse.class);
-        return ResponseEntity.ok(deleteConsultantResponse);
+        return ResponseEntity.ok().build();
     }
 
 

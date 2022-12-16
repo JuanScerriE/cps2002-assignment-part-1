@@ -12,7 +12,7 @@ public class ConsultantEntity {
     private String type;
     private String speciality;
     private int rate;
-    private double companyRate;
+    private double companyCut;
 
     public String getUuid() {
         return uuid;
@@ -62,14 +62,13 @@ public class ConsultantEntity {
         this.rate = rate;
     }
 
-    public double getCompanyRate() {
-        return companyRate;
+    public double getCompanyCut() {
+        return companyCut;
     }
 
-    public void setCompanyRate(double companyRate) {
-        this.companyRate = companyRate;
+    public void setCompanyCut(double companyCut) {
+        this.companyCut = companyCut;
     }
-
 
     @Override
     public String toString() {
@@ -81,7 +80,7 @@ public class ConsultantEntity {
                 "Speciality" + speciality + "\n" +
                 "Rate" + rate + "\n" +
                 "Id" + uuid + "\n" +
-                "Company Rate" + companyRate + "\n" +
+                "Company Cut" + companyCut + "\n" +
                 '}';
     }
 }
