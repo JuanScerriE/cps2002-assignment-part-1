@@ -39,21 +39,17 @@ public class ConsultantControllerTests extends Tests {
 
         request.setValue(consultant);
 
-
         mockMvc.perform(post("/new_consultant")
                 .content(asJsonString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-            )
-            .andExpect(status().isOk());
-
-                
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
 
     }
 
     @Test
     public void testGetConsultant() throws Exception {
         Consultant consultant = new Consultant();
-        //set values of consultant for testing
+      
         consultant.setName("John");
         consultant.setType("Senior");
         consultant.setSpeciality("Maths");
@@ -73,16 +69,14 @@ public class ConsultantControllerTests extends Tests {
                 .andExpect(jsonPath("$.uuid").value(consultant.getUuid()))
 
                 .andExpect(jsonPath("$.companyCut").value(consultant.getCompanyCut()))
-            .andReturn();
-
+                .andReturn();
 
     }
 
-    //test for get all consultants
+    
     @Test
     public void testGetAllConsultants() throws Exception {
-        //pass customer id and put query function before booking to find consultant id, or
-        //give option for them to pass consultant id themselves || name.
+        
         Consultant consultant = new Consultant();
 
         consultant.setName("John");
@@ -92,7 +86,6 @@ public class ConsultantControllerTests extends Tests {
 
         String consultantId = consultantsService.CreateConsultant(consultant);
         consultant.setUuid(consultantId);
-
 
         Consultant consultantX = new Consultant();
 
@@ -104,10 +97,9 @@ public class ConsultantControllerTests extends Tests {
         String consultantXId = consultantsService.CreateConsultant(consultantX);
         consultantX.setUuid(consultantXId);
 
-
         mockMvc.perform(get("/consultants"))
-            .andExpect(status().isOk())
-            .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
 
     }
 
@@ -125,16 +117,15 @@ public class ConsultantControllerTests extends Tests {
         consultant.setUuid(consultantId);
 
         mockMvc.perform(delete("/delete/{consultantId}", consultantId))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testUpdateConsultant() throws Exception {
         UpdateConsultantRequest request = new UpdateConsultantRequest();
-        //pass customer id and put query function before booking to find consultant id, or
-        //give option for them to pass consultant id themselves || name.
+       
         Consultant consultant = new Consultant();
-        //set values of consultant for testing
+      
         consultant.setName("John");
         consultant.setType("Consultant");
         consultant.setSpeciality("Maths");
@@ -142,7 +133,7 @@ public class ConsultantControllerTests extends Tests {
 
         String consultantId = consultantsService.CreateConsultant(consultant);
         consultant.setUuid(consultantId);
-        //new consultant object
+       
         Consultant updated_consultant = new Consultant();
         updated_consultant.setName("Sam");
         updated_consultant.setType("Consultant");
@@ -152,19 +143,16 @@ public class ConsultantControllerTests extends Tests {
 
         request.setValue(updated_consultant);
 
-
         mockMvc.perform(post("/update_consultant")
                 .content(asJsonString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk());
-
+                .andExpect(status().isOk());
 
     }
 
     @Test
     public void testGetConsultantsBySpeciality() throws Exception {
-        //pass customer id and put query function before booking to find consultant id, or
-        //give option for them to pass consultant id themselves || name.
+       
         Consultant consultant = new Consultant();
 
         consultant.setName("John");
@@ -186,7 +174,7 @@ public class ConsultantControllerTests extends Tests {
         consultant2.setUuid(consultantId2);
 
         mockMvc.perform(get("/getallconsultants/{speciality}", "Mat"))
-            .andExpect(status().isOk())
-            .andReturn();
+                .andExpect(status().isOk())
+                .andReturn();
     }
 }

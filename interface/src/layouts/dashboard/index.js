@@ -112,7 +112,7 @@ function Dashboard() {
         name: consultantName,
         type: type,
         speciality: speciality,
-        rate: rate
+        rate: rate,
       }
     }
 
