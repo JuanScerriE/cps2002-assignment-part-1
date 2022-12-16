@@ -63,12 +63,13 @@ public class ConsultantControllerTests extends Tests {
 
 
         mockMvc.perform(get("/consultant/{consultantId}", consultantId))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value(consultant.getName()))
-            .andExpect(jsonPath("$.type").value(consultant.getType()))
-            .andExpect(jsonPath("$.speciality").value(consultant.getSpeciality()))
-            .andExpect(jsonPath("$.rate").value(consultant.getRate()))
-            .andExpect(jsonPath("$.uuid").value(consultant.getUuid()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(consultant.getName()))
+                .andExpect(jsonPath("$.type").value(consultant.getType()))
+                .andExpect(jsonPath("$.speciality").value(consultant.getSpeciality()))
+                .andExpect(jsonPath("$.rate").value(consultant.getRate()))
+                .andExpect(jsonPath("$.uuid").value(consultant.getUuid()))
+                .andExpect(jsonPath("$.companyCut").value(consultant.getCompanyCut()))
             .andReturn();
 
     }
