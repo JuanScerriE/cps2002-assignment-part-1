@@ -53,6 +53,7 @@ public class ConsultantsService {
 
         consultantEntity = consultantRepository.save(consultantEntity);
 
+
         return consultantEntity.getUuid();
 
 
@@ -84,12 +85,14 @@ public class ConsultantsService {
         consultantEntityToFind.setUuid(id);
         ConsultantEntity consultantEntity = consultantRepository.findById(id).orElse(null);
 
+        System.out.println(consultantEntity.toString());
+
         if (consultantEntity == null) {
             return null;
         }
 
         Consultant consultant = mapper.map(consultantEntity, Consultant.class);
-
+        System.out.println(consultant.toString());
         return consultant;
 
     }

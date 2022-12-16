@@ -40,7 +40,7 @@ public class ConsultantControllerTests extends Tests {
         request.setValue(consultant);
 
 //        Consultant got = create.GetConsultant("2ac0cb64");
-//        System.out.println(asJsonString(request));
+
 
         mockMvc.perform(post("/new_consultant")
                         .content(asJsonString(request))
@@ -62,13 +62,14 @@ public class ConsultantControllerTests extends Tests {
         Consultant consultant = new Consultant();
         //set values of consultant for testing
         consultant.setName("John");
-        consultant.setType("Consultant");
+        consultant.setType("Senior");
         consultant.setSpeciality("Maths");
-        consultant.setRate(10);
+        consultant.setRate(100);
 
         String consultantId = consultantsService.CreateConsultant(consultant);
         consultant.setUuid(consultantId);
 
+        System.out.println(consultant.getCompanyRate());
 
         mockMvc.perform(get("/consultant/{consultantId}", consultantId))
                 .andExpect(status().isOk())
@@ -77,6 +78,7 @@ public class ConsultantControllerTests extends Tests {
                 .andExpect(jsonPath("$.speciality").value(consultant.getSpeciality()))
                 .andExpect(jsonPath("$.rate").value(consultant.getRate()))
                 .andExpect(jsonPath("$.uuid").value(consultant.getUuid()))
+                .andExpect(jsonPath("$.companyRate").value(consultant.getCompanyRate()))
                 .andReturn();
 
     }

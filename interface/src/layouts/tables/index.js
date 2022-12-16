@@ -103,10 +103,13 @@ function Tables() {
 
    const handleDeleteConsultant = async () => {
     console.log(selectedConsultant);
-    let promise = await fetch(`http://localhost:9000/resource-management-service/delete/${selectedConsultant.uuid}`, {  method: "DELETE"});
-    let result = await promise.json();
-    console.log(result);
-    FetchConsultants();
+     fetch(`http://localhost:9000/resource-management-service/delete/${selectedConsultant.uuid}`, {  method: "DELETE"}).then(()=>{
+ 
+     FetchConsultants();
+     }).catch((err)=>{
+        console.log(err);
+      });
+   
   }
 
   const handleUpdateConsultant = async () => {
@@ -251,6 +254,7 @@ function Tables() {
     { field: 'type', headerName: 'Type', width: 100 },
     { field: 'speciality', headerName: 'Speciality', width: 250 },
     { field: 'rate', headerName: 'Rate', width: 100 },
+    { field: 'companyRate', headerName: 'Company Earnings', width: 200 },
   ]
   const user_columns = [
     { field: 'uuid', headerName: 'ID', width: 350 },
