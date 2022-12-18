@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import { DataGrid } from '@mui/x-data-grid';
 import MDSnackbar from "../../components/MDSnackbar";
@@ -204,13 +203,15 @@ function Tables() {
     setUsers(result);
   }
 
-
+  //refresh state
   useEffect(() => {
     FetchConsultants();
     FetchUsers();
     FetchBookings();
   }, [selectedConsultant, selectedUser, selectedBooking]);
 
+
+  //table structure
   const columns = [
 
     { field: 'uuid', headerName: 'ID', width: 350 },
@@ -267,7 +268,6 @@ function Tables() {
       </div>
 
       CONSULTANTS TABLE
-
       <DataGrid
         sx={{ minHeight: 250 }}
         rows={rows}
@@ -296,6 +296,8 @@ function Tables() {
 
 
       />
+
+
       {
         selectedConsultant && !selectedUser &&
         <div style={{ display: 'flex', width: '100%', flexDirection: "row" }}>
@@ -333,6 +335,7 @@ function Tables() {
         </button>
       </div>
 
+
       USERS TABLE
       <DataGrid
         sx={{ minHeight: 270 }}
@@ -362,6 +365,7 @@ function Tables() {
 
 
       />
+
       {
         selectedUser && <div style={{ display: 'flex', width: '100%', flexDirection: "row", marginBottom: '7%' }}>
           <h3 onClick={handleDeleteUser} style={{ cursor: 'pointer' }}>Delete</h3>
@@ -393,6 +397,8 @@ function Tables() {
         </div>
 
       }
+
+
       <h3 style={{ marginTop: '10%' }}>BOOKING TABLE</h3>
       <DataGrid
         sx={{ minHeight: 250 }}
