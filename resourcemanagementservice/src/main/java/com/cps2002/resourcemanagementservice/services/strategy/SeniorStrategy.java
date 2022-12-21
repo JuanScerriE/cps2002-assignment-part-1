@@ -1,14 +1,14 @@
 package com.cps2002.resourcemanagementservice.services.strategy;
 
-public class SeniorStrategy implements CommisionStrategy{
-    private double commision = 0.15;
+public class SeniorStrategy implements CommissionStrategy {
+    private double commission = 0.15;
 
 
     @Override
-    public double commision(int rate) {
-        double com = rate * commision;
-      
-        
+    public double commission(int rate) {
+        double com = rate * commission;
+
+
         return Math.round(com * 100.0) / 100.0;
     }
     

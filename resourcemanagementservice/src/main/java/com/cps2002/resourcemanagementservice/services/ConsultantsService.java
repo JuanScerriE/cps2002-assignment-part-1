@@ -33,13 +33,13 @@ public class ConsultantsService {
         String type = consultant.getType();
 
         if (Objects.equals(type, "Senior")) {
-            double companyCut = consultant.Commision(new SeniorStrategy());
+            double companyCut = consultant.commission(new SeniorStrategy());
             consultant.setCompanyCut(companyCut);
         } else if (Objects.equals(type, "Junior")) {
-            double companyCut = consultant.Commision(new JuniorStrategy());
+            double companyCut = consultant.commission(new JuniorStrategy());
             consultant.setCompanyCut(companyCut);
         } else if (Objects.equals(type, "Executive")) {
-            double companyCut = consultant.Commision(new ExecutiveStrategy());
+            double companyCut = consultant.commission(new ExecutiveStrategy());
             consultant.setCompanyCut(companyCut);
         }
 
@@ -129,13 +129,13 @@ public class ConsultantsService {
         String type = consultant.getType();
 
         if (Objects.equals(type, "Senior")) {
-            double companyCut = consultant.Commision(new SeniorStrategy());
+            double companyCut = consultant.commission(new SeniorStrategy());
             consultant.setCompanyCut(companyCut);
         } else if (Objects.equals(type, "Junior")) {
-            double companyCut = consultant.Commision(new JuniorStrategy());
+            double companyCut = consultant.commission(new JuniorStrategy());
             consultant.setCompanyCut(companyCut);
         } else if (Objects.equals(type, "Executive")) {
-            double companyCut = consultant.Commision(new ExecutiveStrategy());
+            double companyCut = consultant.commission(new ExecutiveStrategy());
             consultant.setCompanyCut(companyCut);
         }
 

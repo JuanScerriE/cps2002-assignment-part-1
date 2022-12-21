@@ -1,6 +1,6 @@
 package com.cps2002.resourcemanagementservice.services.models;
 
-import com.cps2002.resourcemanagementservice.services.strategy.CommisionStrategy;
+import com.cps2002.resourcemanagementservice.services.strategy.CommissionStrategy;
 
 public class Consultant {
     private String uuid;
@@ -58,8 +58,8 @@ public class Consultant {
         this.companyCut = companyCut;
     }
 
-    public double Commision(CommisionStrategy commisionStrategy) {
-        return commisionStrategy.commision(rate);
+    public double commission(CommissionStrategy commissionStrategy) {
+        return commissionStrategy.commission(rate);
     }
 
     @Override
