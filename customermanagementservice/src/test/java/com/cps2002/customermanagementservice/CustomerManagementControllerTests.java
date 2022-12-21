@@ -315,41 +315,4 @@ public class CustomerManagementControllerTests extends ControllerTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").exists());
     }
-
-//    @Test
-//    public void testEcho() throws Exception {
-//        EchoRequest request = new EchoRequest();
-//
-//        request.setValue("Aw Dinja!");
-//
-//        mockMvc.perform(post("/echo")
-//                        .content(toJsonString(request))
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                )
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.uuid").exists())
-//                .andExpect(jsonPath("$.value").value("Aw Dinja!"));
-//    }
-//
-//    @Test
-//    public void testEchoSaving() throws Exception {
-//        EchoRequest request = new EchoRequest();
-//
-//        request.setValue("Aw dinja!");
-//
-//        String stringResponse = mockMvc.perform(post("/echo")
-//                        .content(toJsonString(request))
-//                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andReturn()
-//                .getResponse()
-//                .getContentAsString();
-//
-//        EchoResponse response = fromJsonString(stringResponse, EchoResponse.class);
-//
-//        mockMvc.perform(get("/get-echo")
-//                        .queryParam("uuid", response.getUuid()))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.uuid").value(response.getUuid()));
-//    }
-
 }

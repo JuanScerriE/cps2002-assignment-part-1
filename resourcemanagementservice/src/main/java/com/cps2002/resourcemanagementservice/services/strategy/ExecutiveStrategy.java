@@ -1,6 +1,5 @@
 package com.cps2002.resourcemanagementservice.services.strategy;
 
-
 public class ExecutiveStrategy implements CommissionStrategy {
     private double commission = 0.10;
 
