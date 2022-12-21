@@ -1,6 +1,5 @@
 package com.cps2002.timetablingservice.services.internal.models;
 
-
 import java.time.LocalDateTime;
 
 public class Booking {
