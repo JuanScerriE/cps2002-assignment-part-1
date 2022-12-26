@@ -48,10 +48,6 @@ function Tables() {
   const [search, setSearch] = useState('');
   const [search_user, setSearchUser] = useState('');
 
-
-
-  ;
-
   const handleChange = (newValue) => {
     setValue(newValue);
   };
@@ -175,14 +171,23 @@ function Tables() {
         body: JSON.stringify(booking)
       });
 
-    let result = await promise.json();
-    console.log(result);
+    if (!promise.ok) {
+        setSnackbar({
+            open: true,
+            message: `Failed to create booking`,
+            color: "error",
+        });
+    } else {
+        let result = await promise.json();
+        console.log(result);
 
-    setSnackbar({
-      open: true,
-      message: `User ${result["uuid"]} Creation Successfully`,
-      color: "success",
-    });
+        setSnackbar({
+            open: true,
+            message: `User ${result["uuid"]} Creation Successfully`,
+            color: "success",
+        });
+    }
+
 
     FetchBookings();
 
