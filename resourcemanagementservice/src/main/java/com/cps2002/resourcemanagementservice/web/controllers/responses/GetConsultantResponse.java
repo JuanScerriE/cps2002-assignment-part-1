@@ -6,7 +6,7 @@ public class GetConsultantResponse {
     private String type;
     private String speciality;
     private int rate;
-    private int companyCut;
+    private double companyCut;
 
     public String getUuid() {
         return uuid;
@@ -48,11 +48,11 @@ public class GetConsultantResponse {
         this.rate = rate;
     }
 
-    public int getCompanyCut() {
+    public double getCompanyCut() {
         return companyCut;
     }
 
-    public void setCompanyCut(int companyCut) {
+    public void setCompanyCut(double companyCut) {
         this.companyCut = companyCut;
     }
 }
